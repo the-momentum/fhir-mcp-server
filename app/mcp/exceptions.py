@@ -46,7 +46,6 @@ class APIErrorResponse(BaseModel):
 
 
 class APIValidationError(APICustomError):
-
     def __init__(
         self,
         code: LiteralString,
@@ -61,7 +60,6 @@ class APIValidationError(APICustomError):
 
 
 class APIMultiValidationError(Exception):
-
     def __init__(
         self,
         errors: Sequence[APIValidationError],

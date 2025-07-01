@@ -1,10 +1,10 @@
 from datetime import datetime, timedelta, timezone
-from functools import lru_cache
 
 import requests
 from fastapi import HTTPException, status
 
 from app.config import settings
+
 
 class Token:
     def __init__(self, access_token: str | None = None, expires_at: datetime | None = None):
@@ -30,7 +30,9 @@ class AccessTokenManager:
         base_url (str): The base URL of the Medplum server
     """
 
-    def __init__(self, client_id: str, client_secret: str, base_url: str, token: Token | None = None):
+    def __init__(
+        self, client_id: str, client_secret: str, base_url: str, token: Token | None = None
+    ):
         self.client_id = client_id
         self.client_secret = client_secret
         self.base_url = base_url
@@ -47,7 +49,9 @@ class AccessTokenManager:
             auth_url, data=client_credentials, timeout=settings.MEDPLUM_TIMEOUT
         )
         if response.status_code != status.HTTP_200_OK:
-            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid client credentials")
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid client credentials"
+            )
         token_data = response.json()
         self.token.access_token = token_data["access_token"]
 

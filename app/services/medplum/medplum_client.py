@@ -6,6 +6,7 @@ from app.services.medplum.errors import handle_requests_exceptions
 from app.services.medplum.token_manager import AccessTokenManager
 from app.utils.auth import BearerAuth
 
+
 class MedplumClient:
     """
     A client for interacting with the Medplum FHIR API.

@@ -8,9 +8,7 @@ type FhirMethod = Literal["GET", "POST", "PUT", "DELETE"]
 class FhirQueryRequest(BaseModel):
     """Request to the FHIR resource."""
 
-    method: FhirMethod = Field(
-        ..., description="The HTTP method used to query the FHIR resource"
-    )
+    method: FhirMethod = Field(..., description="The HTTP method used to query the FHIR resource")
     path: str = Field(..., description="The path of the FHIR resource")
     body: dict[str, Any] | None = Field(
         None,
