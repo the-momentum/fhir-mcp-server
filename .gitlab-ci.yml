@@ -1,0 +1,18 @@
+variables:
+  DEPLOY_PATH: "~"
+
+stages:
+  - lint
+  - build
+
+ruff:
+  stage: lint
+  image: python:3.12-slim
+  before_script:
+    - pip install uv
+    - uv sync --group lint
+  script:
+    - uv run ruff check .
+    - uv run ruff format --check .
+  rules:
+    - when: always
