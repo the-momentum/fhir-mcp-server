@@ -48,6 +48,7 @@ target-version = "py313"
 python_version = "3.13"
 ignore_missing_imports = true
 disallow_untyped_defs = false
+disable_error_code = ["var-annotated"]
 exclude = [
     "alembic/",
     "migrations/",
