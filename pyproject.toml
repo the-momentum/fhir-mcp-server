@@ -30,9 +30,11 @@ dev = [
     "pytest-cov>=6.2.1",
 ]
 lint = [
+    "mypy>=1.16.1",
     "pre-commit>=4.2.0",
     "ruff>=0.12.1",
     "ty>=0.0.1a12",
+    "types-requests>=2.32.4.20250611",
 ]
 
 [tool.pytest.ini_options]
@@ -46,6 +48,7 @@ target-version = "py313"
 python_version = "3.13"
 ignore_missing_imports = true
 disallow_untyped_defs = false
+disable_error_code = ["var-annotated"]
 exclude = [
     "alembic/",
     "migrations/",
