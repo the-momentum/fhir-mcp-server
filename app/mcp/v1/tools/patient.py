@@ -17,7 +17,7 @@ async def request_patient_resource(
     Rules:
         - When creating or updating a patient, use only the data explicitly provided by the user.
         - Do not guess, auto-fill, or assume any missing data.
-        - When deleting a patient, ask the user for confirmation with details of the patient.
+        - When deleting a patient, ask the user for confirmation with details of the patient and wait for the user's confirmation.
         - Provide links to the app (not api) patient resource in the final response.
 
     Args:
