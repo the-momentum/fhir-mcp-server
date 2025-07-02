@@ -8,7 +8,6 @@ if [ "$DEBUG" = "True" ]; then
     # Todo: enable hot reload with uvicorn
     echo "DEBUG mode is enabled" >&2
     uv run fastmcp run app/main.py
-
 else
     uv run fastmcp run app/main.py
 fi

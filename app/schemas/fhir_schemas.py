@@ -23,7 +23,7 @@ class FhirQueryResponse(FhirQueryRequest):
     response: Any = Field(..., description="The response from the FHIR resource")
 
 
-class FhirQueryResponseList(BaseModel):
-    responses: list[FhirQueryResponse] = Field(
-        ..., description="The list of FHIR resource responses"
-    )
+class FhirError(FhirQueryRequest):
+    """Error response from the FHIR resource."""
+
+    error_message: str
