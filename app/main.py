@@ -6,6 +6,7 @@ from app.config import settings
 
 
 print("SETUP -> Setting up the app", file=sys.stderr)
+
 mcp = FastMCP(settings.PROJECT_NAME)
 
 mcp.mount(mcp_router)

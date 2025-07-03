@@ -11,7 +11,7 @@ services:
       - ./app:/root_project/app
       - type: bind
         source: ./config/.env
-        target: /root_project/.env
+        target: /root_project/config/.env
         bind:
           create_host_path: false
     ports:

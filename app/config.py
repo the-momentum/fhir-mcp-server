@@ -1,6 +1,5 @@
-import os
 from functools import lru_cache
-
+from pathlib import Path
 from pydantic import AnyHttpUrl, ValidationInfo, field_validator, SecretStr
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
@@ -57,8 +56,7 @@ class Settings(BaseSettings):
 
     model_config = SettingsConfigDict(
         case_sensitive=True,
-        env_file=os.environ.get("ENV", ".env"),
-        extra="allow",
+        env_file=str(Path(__file__).parent.parent / "config" / ".env"),
     )
 
 
