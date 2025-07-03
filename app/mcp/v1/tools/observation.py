@@ -1,5 +1,6 @@
 from fastmcp import FastMCP
 
+from app.config import settings
 from app.services.medplum.medplum_client import medplum_client
 from app.schemas.fhir_schemas import FhirQueryResponse, FhirQueryRequest, FhirError
 from app.services.loinc_client import loinc_client
@@ -10,7 +11,9 @@ observation_request_router = FastMCP(name="Observation Request MCP")
 
 @observation_request_router.tool
 async def get_loinc_codes(
-    component_name: str, max_codes: int = 5, max_fetch: int = 50
+    component_name: str,
+    max_codes: int = settings.LOINC_MAX_CODES,
+    max_fetch: int = settings.LOINC_MAX_FETCH,
 ) -> list[dict]:
     """
     Get the most relevant LOINC codes for a given observation name.
@@ -28,21 +31,28 @@ async def get_loinc_codes(
     Strategy:
     1. Start with default parameters (max_codes=5, max_fetch=50)
     2. Check if result contains "Error" key in first element
+    3. If "Authentication failed" or "Authorization" error:
+        - STOP using this tool immediately.
+        - Do not retry with different parameters.
+        - Report the authentication error to the user.
+        - Suggest they check their LOINC API credentials.
+        - Ask the user if they want to use your knowledge to find a LOINC code and wait for the confirmation.
+          Add warning that this may cause wrong results.
     3. If "No active LOINC codes found in current fetch":
-       - Increase max_fetch progressively (50→100→200→RecordsFound)
-       - Keep trying until max_fetch >= RecordsFound or you find active codes
-    4. If "No LOINC codes found": Try alternative search terms or report failure
+        - Increase max_fetch progressively (50→100→200→RecordsFound).
+        - Keep trying until max_fetch >= RecordsFound or you find active codes.
+    4. If "No LOINC codes found": Try alternative search terms or report failure.
     5. If you get codes but they don't semantically match your query:
-       - Increase max_codes to see more options
-       - Look for better matches in COMPONENT, SHORTNAME, LONG_COMMON_NAME fields
+        - Increase max_codes to see more options.
+        - Look for better matches in COMPONENT, SHORTNAME, LONG_COMMON_NAME fields.
 
     Rules:
-    - Function returns codes sorted by popularity - YOU decide which are most relevant
-    - Don't automatically pick the first (most common) codes
-    - Prioritize semantic relevance: exact matches in COMPONENT > SHORTNAME > partial matches
-    - Balance popularity with relevance (very rare codes might not be clinically useful)
-    - Keep increasing max_fetch until you exhaust all available records (max_fetch >= RecordsFound)
-    - Increase max_codes only when you need more options to find better semantic matches
+    - Function returns codes sorted by popularity - YOU decide which are most relevant.
+    - Don't automatically pick the first (most common) codes.
+    - Prioritize semantic relevance: exact matches in COMPONENT > SHORTNAME > partial matches.
+    - Balance popularity with relevance (very rare codes might not be clinically useful).
+    - Keep increasing max_fetch until you exhaust all available records (max_fetch >= RecordsFound).
+    - Increase max_codes only when you need more options to find better semantic matches.
 
     Args:
         component_name: The name of the observation to get the LOINC code for (i.e. "glucose").

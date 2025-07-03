@@ -38,6 +38,8 @@ class Settings(BaseSettings):
     LOINC_USERNAME: str = ""
     LOINC_PASSWORD: SecretStr = SecretStr("")
     LOINC_TIMEOUT: int = 60
+    LOINC_MAX_CODES: int = 5
+    LOINC_MAX_FETCH: int = 50
 
     @field_validator("*", mode="after")
     def _decryptor(cls, v, validation_info: ValidationInfo, *args, **kwargs):
