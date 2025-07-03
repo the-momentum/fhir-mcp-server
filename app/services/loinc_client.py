@@ -33,14 +33,9 @@ class LoincClient:
             # Check for authentication errors
             if "Error" in data:
                 error_msg = data["Error"]
-                if (
-                    "Authentication Failed" in error_msg
-                    or "authorization" in error_msg.lower()
-                ):
+                if "Authentication Failed" in error_msg or "authorization" in error_msg.lower():
                     error_desc = data.get("ErrorDescription", "")
-                    return [
-                        {"Error": f"Authentication failed: {error_msg}. {error_desc}"}
-                    ]
+                    return [{"Error": f"Authentication failed: {error_msg}. {error_desc}"}]
                 else:
                     return [{"Error": error_msg}]
         except requests.exceptions.RequestException as e:
@@ -48,18 +43,14 @@ class LoincClient:
         except ValueError as e:
             return [{"Error": f"Invalid JSON response: {str(e)}"}]
 
-        if not (
-            records_found := data.get("ResponseSummary", {}).get("RecordsFound", 0)
-        ):
+        if not (records_found := data.get("ResponseSummary", {}).get("RecordsFound", 0)):
             return [{"RecordsFound": 0, "Error": "No LOINC codes found"}]
 
         # get only active codes
         active_codes = []
 
         if "Results" in data and data["Results"]:
-            active_codes = [
-                item for item in data["Results"] if item.get("STATUS") == "ACTIVE"
-            ]
+            active_codes = [item for item in data["Results"] if item.get("STATUS") == "ACTIVE"]
 
         # No active codes found
         if not active_codes:
