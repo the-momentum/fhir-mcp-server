@@ -44,9 +44,7 @@ class LoincClient:
         active_codes = []
 
         if "Results" in data and data["Results"]:
-            active_codes = [
-                item for item in data["Results"] if item.get("STATUS") == "ACTIVE"
-            ]
+            active_codes = [item for item in data["Results"] if item.get("STATUS") == "ACTIVE"]
 
         # No active codes found
         if not active_codes:

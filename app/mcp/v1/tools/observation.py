@@ -55,3 +55,47 @@ async def get_loinc_codes(
     return loinc_client.get_common_loinc_codes(
         component_name, max_codes=max_codes, max_fetch=max_fetch
     )
+
+
+@observation_request_router.tool
+async def request_observation_resource(
+    request: FhirQueryRequest,
+) -> FhirQueryResponse | FhirError:
+    """
+    Makes an HTTP request to the FHIR server.
+    Use this tool to perform CRUD operations only on the FHIR Observation resource.
+
+    IMPORTANT: Before fetching observations that require LOINC codes:
+    1. First use get_loinc_code() tool to find appropriate LOINC codes
+    2. Then use this tool to fetch the observation with the LOINC code
+
+    Rules:
+        - When creating or updating an observation, use only the data explicitly provided by the user.
+        - Do not guess, auto-fill, or assume any missing data.
+        - When deleting an observation, ask the user for confirmation with details of the observation and wait for the user's confirmation.
+        - Provide links to the app (not api) observation resource in the final response.
+
+    Args:
+        method: HTTP method (GET, POST, PUT, DELETE)
+        path: Resource path (e.g., "/Observation?subject:Patient.name=Homer%20Simpson")
+        body: Optional JSON data for POST/PUT requests)
+
+    Returns:
+        JSON response from the FHIR server
+    """
+
+    try:
+        response = medplum_client.request(
+            method=request.method,
+            path=request.path,
+            json=request.body,
+        )
+    except Exception as e:
+        return FhirError(
+            error_message=str(e),
+            method=request.method,
+            path=request.path,
+            body=request.body,
+        )
+
+    return response
