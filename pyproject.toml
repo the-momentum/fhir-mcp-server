@@ -54,3 +54,6 @@ exclude = [
     "alembic/",
     "migrations/",
 ]
+
+[project.scripts]
+start = "start:main"

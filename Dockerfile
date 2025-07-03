@@ -17,7 +17,6 @@ ENV PATH="/root_project/.venv/bin:$PATH"
 RUN uv sync --frozen --no-dev
 
 FROM python:3.13-slim
-ARG DOTFILE=.env
 
 RUN apt-get update && \
   apt-get install -y --no-install-recommends libpq5 && \
@@ -30,11 +29,6 @@ COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
 
 COPY --from=builder /root_project /root_project
 
-COPY ./config/${DOTFILE} .env
-
 EXPOSE 8000
 
-RUN chmod +x ./prestart.sh
-RUN chmod +x ./scripts/start/app.sh
-
-CMD ["./prestart.sh"]
+CMD ["uv", "run", "python", "start.py"]
