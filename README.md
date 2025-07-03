@@ -1,7 +1,4 @@
-# Team Python - FastAPI base Boilerplate
-
-1. Install uv.
-2. `uv run pre-commit run --all-files` (dev)
+# MCP server
 
 ## Config files
 
