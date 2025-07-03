@@ -17,8 +17,10 @@
                 "-i",
                 "--rm",
                 "--init",
-                "-v", # optional - volume for reload
-                "<project-path>/app:/root_project/app", # optional - volume for reload
+                "--mount",
+                "type=bind,source=<project-path>/config/.env,target=/root_project/.env",
+                "--mount", # optional - volume for reload
+                "type=bind,source=<project-path>/app,target=/root_project/app", # optional
                 "mcp-server:latest"
             ]
         }

@@ -9,6 +9,11 @@ services:
       - config/.env
     volumes:
       - ./app:/root_project/app
+      - type: bind
+        source: ./config/.env
+        target: /root_project/.env
+        bind:
+          create_host_path: false
     ports:
       - 8000:8000
     stdin_open: true
