@@ -25,12 +25,21 @@ class Settings(BaseSettings):
 
     DATABASE_URI: str = ""  # TODO add db if required
 
+    # MEDPLUM
     MEDPLUM_HOST: str = "https://api.medplum.com"
     FHIR_BASE_URL: str = "/fhir/R4"
     MEDPLUM_APP_URL: str = "https://app.medplum.com"
     MEDPLUM_CLIENT_ID: str = ""
     MEDPLUM_CLIENT_SECRET: SecretStr = SecretStr("")
     MEDPLUM_TIMEOUT: int = 20
+
+    # LOINC
+    LOINC_ENDPOINT: str = "https://loinc.regenstrief.org/searchapi/loincs"
+    LOINC_USERNAME: str = ""
+    LOINC_PASSWORD: SecretStr = SecretStr("")
+    LOINC_TIMEOUT: int = 60
+    LOINC_MAX_CODES: int = 5
+    LOINC_MAX_FETCH: int = 50
 
     @field_validator("*", mode="after")
     def _decryptor(cls, v, validation_info: ValidationInfo, *args, **kwargs):
