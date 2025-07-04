@@ -4,10 +4,10 @@ from app.services.medplum.medplum_client import medplum_client
 from app.schemas.fhir_schemas import FhirQueryResponse, FhirQueryRequest, FhirError
 
 
-family_member_history_request_router = FastMCP(name="Family Member History Request MCP")
+family_member_history_router = FastMCP(name="Family Member History Request MCP")
 
 
-@family_member_history_request_router.tool
+@family_member_history_router.tool
 async def request_family_member_history_resource(
     request: FhirQueryRequest,
 ) -> FhirQueryResponse | FhirError:

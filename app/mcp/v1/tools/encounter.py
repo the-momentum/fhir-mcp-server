@@ -4,10 +4,10 @@ from app.services.medplum.medplum_client import medplum_client
 from app.schemas.fhir_schemas import FhirQueryResponse, FhirQueryRequest, FhirError
 
 
-encounter_request_router = FastMCP(name="Encounter Request MCP")
+encounter_router = FastMCP(name="Encounter Request MCP")
 
 
-@encounter_request_router.tool
+@encounter_router.tool
 async def request_encounter_resource(
     request: FhirQueryRequest,
 ) -> FhirQueryResponse | FhirError:

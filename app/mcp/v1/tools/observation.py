@@ -6,10 +6,10 @@ from app.schemas.fhir_schemas import FhirQueryResponse, FhirQueryRequest, FhirEr
 from app.services.loinc_client import loinc_client
 
 
-observation_request_router = FastMCP(name="Observation Request MCP")
+observation_router = FastMCP(name="Observation Request MCP")
 
 
-@observation_request_router.tool
+@observation_router.tool
 async def get_loinc_codes(
     component_name: str,
     max_codes: int = settings.LOINC_MAX_CODES,
@@ -67,7 +67,7 @@ async def get_loinc_codes(
     )
 
 
-@observation_request_router.tool
+@observation_router.tool
 async def request_observation_resource(
     request: FhirQueryRequest,
 ) -> FhirQueryResponse | FhirError:

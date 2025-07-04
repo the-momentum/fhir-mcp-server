@@ -4,10 +4,10 @@ from app.services.medplum.medplum_client import medplum_client
 from app.schemas.fhir_schemas import FhirQueryResponse, FhirQueryRequest, FhirError
 
 
-allergy_intolerance_request_router = FastMCP(name="Allergy Intolerance Request MCP")
+allergy_intolerance_router = FastMCP(name="Allergy Intolerance Request MCP")
 
 
-@allergy_intolerance_request_router.tool
+@allergy_intolerance_router.tool
 async def request_allergy_intolerance_resource(
     request: FhirQueryRequest,
 ) -> FhirQueryResponse | FhirError:

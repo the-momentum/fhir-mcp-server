@@ -4,10 +4,10 @@ from app.services.medplum.medplum_client import medplum_client
 from app.schemas.fhir_schemas import FhirQueryResponse, FhirQueryRequest, FhirError
 
 
-immunization_request_router = FastMCP(name="Immunization Request MCP")
+immunization_router = FastMCP(name="Immunization Request MCP")
 
 
-@immunization_request_router.tool
+@immunization_router.tool
 async def request_immunization_resource(
     request: FhirQueryRequest,
 ) -> FhirQueryResponse | FhirError:

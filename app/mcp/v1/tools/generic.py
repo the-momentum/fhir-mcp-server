@@ -8,10 +8,10 @@ from app.services.medplum.medplum_client import medplum_client
 from app.schemas.fhir_schemas import FhirQueryResponse, FhirQueryRequest, FhirError
 
 
-generic_request_router = FastMCP(name="Generic Request MCP")
+generic_router = FastMCP(name="Generic Request MCP")
 
 
-@generic_request_router.tool
+@generic_router.tool
 async def request_generic_resource(
     request: FhirQueryRequest,
 ) -> FhirQueryResponse | FhirError:
