@@ -3,6 +3,9 @@
 ## Config files
 
 ### Docker
+
+Build docker image:
+```make build```
 ```
 {
     "mcpServers": {
