@@ -1,4 +1,5 @@
 from requests import PreparedRequest
+from requests.structures import CaseInsensitiveDict
 from requests.auth import AuthBase
 
 
@@ -9,5 +10,6 @@ class BearerAuth(AuthBase):
         self.token = token
 
     def __call__(self, r: PreparedRequest) -> PreparedRequest:
+        r.headers = r.headers or CaseInsensitiveDict()
         r.headers["Authorization"] = f"Bearer {self.token}"
         return r
