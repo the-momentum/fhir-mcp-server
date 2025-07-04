@@ -52,3 +52,14 @@ on MacOS/Linux:
     }
 }
 ```
+
+## Dedicated tools:
+- Patient
+- Observation
+- Medication
+- Encounter
+- Condition
+- AllergyIntolerance
+- DocumentReference
+- Immunization
+- FamilyMemberHistory
