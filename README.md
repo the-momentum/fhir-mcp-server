@@ -33,7 +33,7 @@ on Windows:
 
 on MacOS/Linux:
 ```which uv```
-
+```
 {
     "mcpServers": {
         "uv-mcp-server": {
@@ -51,3 +51,4 @@ on MacOS/Linux:
         }
     }
 }
+```
