@@ -13,6 +13,8 @@ class PineconeClient:
             embed_model=settings.EMBEDDING_MODEL,
             dimension=settings.PINECONE_DIMENSION,
             metric=settings.PINECONE_METRIC,
+            cloud=settings.PINECONE_CLOUD,
+            region=settings.PINECONE_REGION,
             field_map={"text": "chunk_text"},
         )
 
@@ -25,14 +27,14 @@ class PineconeClient:
         fhir_document_id: str,
         top_k: int = 10,
         namespace: str = settings.PINECONE_NAMESPACE,
-    ):
+    ) -> list[dict]:
         results = self.index.search(
             namespace=namespace,
             query={
                 "top_k": top_k,
                 "inputs": {"text": query},
                 "filter": {"fhir_document_id": fhir_document_id},
-            },
+            },  # type: ignore
         )
 
         return convert_pinecone_response_to_json(results)

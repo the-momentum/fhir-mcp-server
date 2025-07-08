@@ -21,7 +21,7 @@ def create_index_if_not_exists(
                 "dimension": dimension,
                 "metric": metric,
                 "field_map": field_map,
-            },
+            },  # type: ignore
         )
 
     return pc.Index(index_name)

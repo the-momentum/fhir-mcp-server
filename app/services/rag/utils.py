@@ -7,7 +7,7 @@ def convert_pinecone_response_to_json(pinecone_response) -> list[dict]:
     for hit in hits:
         converted.append(
             {
-                "id": hit.get("_id"),
+                "fhir_document_id": hit.get("fhir_document_id"),
                 "score": hit.get("_score"),
                 "category": (hit["fields"].get("category") if "fields" in hit else None),
                 "chunk_text": (hit["fields"].get("chunk_text") if "fields" in hit else None),

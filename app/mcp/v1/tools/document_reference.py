@@ -3,7 +3,7 @@ from fastmcp import FastMCP
 from app.services.medplum.medplum_client import medplum_client
 from app.schemas.fhir_schemas import FhirQueryResponse, FhirQueryRequest, FhirError
 from app.services.rag.pinecone_client import pinecone_client
-from app.services.rag.document_manager import document_manager
+from app.services.rag.document_processor import document_processor
 
 document_reference_router = FastMCP(name="Document Reference Request MCP")
 
@@ -111,4 +111,4 @@ async def add_pdf_to_pinecone(url: str, fhir_document_id: str):
         url: URL of the PDF file
         fhir_document_id: ID of the FHIR DocumentReference resource
     """
-    document_manager.process_pdf(url=url, fhir_document_id=fhir_document_id)
+    document_processor.process_pdf(url=url, fhir_document_id=fhir_document_id)

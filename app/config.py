@@ -43,12 +43,15 @@ class Settings(BaseSettings):
     PINECONE_API_KEY: SecretStr = SecretStr("")
     PINECONE_NAMESPACE: str = "fhir-papers"
     PINECONE_INDEX_NAME: str = "fhir-mcp-server"
+    PINECONE_CLOUD: str = "aws"
+    PINECONE_REGION: str = "us-east-1"
     # RAG
     EMBEDDING_MODEL: str = "llama-text-embed-v2"  # "text-embedding-3-small"
     CHUNK_SIZE: int = 1000
     CHUNK_OVERLAP: int = 200
     PINECONE_DIMENSION: int = 1024
     PINECONE_METRIC: str = "cosine"
+    PINECONE_BATCH_SIZE: int = 96
 
     @field_validator("*", mode="after")
     def _decryptor(cls, v, validation_info: ValidationInfo, *args, **kwargs):
