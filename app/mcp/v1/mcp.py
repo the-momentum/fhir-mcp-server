@@ -10,6 +10,7 @@ from app.mcp.v1.tools import (
     immunization,
     family_member_history,
     medication,
+    document_reference,
 )
 
 mcp_router = FastMCP(name="Main MCP")
@@ -23,3 +24,4 @@ mcp_router.mount(allergy_intolerance.allergy_intolerance_router)
 mcp_router.mount(immunization.immunization_router)
 mcp_router.mount(family_member_history.family_member_history_router)
 mcp_router.mount(medication.medication_router)
+mcp_router.mount(document_reference.document_reference_router)

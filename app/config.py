@@ -40,6 +40,16 @@ class Settings(BaseSettings):
     LOINC_MAX_CODES: int = 5
     LOINC_MAX_FETCH: int = 50
 
+    PINECONE_API_KEY: SecretStr = SecretStr("")
+    PINECONE_NAMESPACE: str = "fhir-papers"
+    PINECONE_INDEX_NAME: str = "fhir-mcp-server"
+    # RAG
+    EMBEDDING_MODEL: str = "llama-text-embed-v2"  # "text-embedding-3-small"
+    CHUNK_SIZE: int = 1000
+    CHUNK_OVERLAP: int = 200
+    PINECONE_DIMENSION: int = 1024
+    PINECONE_METRIC: str = "cosine"
+
     @field_validator("*", mode="after")
     def _decryptor(cls, v, validation_info: ValidationInfo, *args, **kwargs):
         if isinstance(v, EncryptedField):

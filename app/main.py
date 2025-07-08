@@ -11,5 +11,6 @@ mcp = FastMCP(settings.PROJECT_NAME)
 
 mcp.mount(mcp_router)
 
+
 if __name__ == "__main__":
     mcp.run()

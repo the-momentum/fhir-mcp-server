@@ -9,9 +9,13 @@ dependencies = [
     "fastmcp>=2.9.2",
     "greenlet>=3.2.3",
     "httpx>=0.28.1",
+    "langchain>=0.3.26",
     "passlib>=1.7.4",
+    "pinecone>=7.3.0",
     "pydantic>=2.11.7",
     "pydantic-settings>=2.10.1",
+    "pymupdf>=1.26.3",
+    "pypdf>=5.7.0",
     "testcontainers>=4.10.0",
     "testcontainers-postgres>=0.0.1rc1",
 ]
