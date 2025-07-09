@@ -8,8 +8,8 @@ def create_index_if_not_exists(
     dimension: int,
     metric: str,
     field_map: dict[str, str],
-    cloud: str = "aws",
-    region: str = "us-east-1",
+    cloud: str,
+    region: str,
 ):
     if not pc.has_index(index_name):
         pc.create_index_for_model(

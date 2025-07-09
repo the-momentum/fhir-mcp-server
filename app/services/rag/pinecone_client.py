@@ -2,6 +2,12 @@ from pinecone import Pinecone
 from app.config import settings
 from app.services.rag.utils import convert_pinecone_response_to_json
 from app.services.rag.pinecone_initializer import create_index_if_not_exists
+from app.schemas.vector_store_schemas import (
+    PineconeSearchResponse,
+    PineconeSearchRequest,
+    PineconeUpsertRequest,
+    PineconeError,
+)
 
 
 class PineconeClient:
@@ -18,36 +24,52 @@ class PineconeClient:
             field_map={"text": "chunk_text"},
         )
 
-    def upsert(self, vectors: list[dict], namespace: str = settings.PINECONE_NAMESPACE):
-        self.index.upsert_records(namespace=namespace, records=vectors)
+    def upsert(
+        self,
+        upsert_request: PineconeUpsertRequest,
+    ) -> None | PineconeError:
+        try:
+            self.index.upsert_records(
+                namespace=upsert_request.namespace,
+                records=upsert_request.vectors,
+            )
+            return None
+        except Exception as e:
+            return PineconeError(error_message=str(e))
 
     def search(
         self,
-        query: str,
+        query: PineconeSearchRequest,
         fhir_document_id: str,
         top_k: int = 10,
         namespace: str = settings.PINECONE_NAMESPACE,
-    ) -> list[dict]:
-        results = self.index.search(
-            namespace=namespace,
-            query={
-                "top_k": top_k,
-                "inputs": {"text": query},
-                "filter": {"fhir_document_id": fhir_document_id},
-            },  # type: ignore
-        )
+    ) -> list[PineconeSearchResponse] | PineconeError:
+        try:
+            results = self.index.search(
+                namespace=namespace,
+                query={
+                    "top_k": top_k,
+                    "inputs": {"text": query.query},
+                    "filter": {"fhir_document_id": fhir_document_id},
+                },  # type: ignore
+            )
 
-        return convert_pinecone_response_to_json(results)
+            return convert_pinecone_response_to_json(results)
+        except Exception as e:
+            return PineconeError(error_message=str(e))
 
     def check_if_document_exists(
         self, fhir_document_id: str, namespace: str = settings.PINECONE_NAMESPACE
-    ) -> bool:
+    ) -> bool | PineconeError:
         """
         Checks if a document exists in the Pinecone index.
         """
-        fetched_vec = self.index.fetch(namespace=namespace, ids=[f"0-{fhir_document_id}"])
+        try:
+            fetched_vec = self.index.fetch(namespace=namespace, ids=[f"0-{fhir_document_id}"])
 
-        return len(fetched_vec.vectors) > 0
+            return len(fetched_vec.vectors) > 0
+        except Exception as e:
+            return PineconeError(error_message=str(e))
 
 
 pinecone_client = PineconeClient()

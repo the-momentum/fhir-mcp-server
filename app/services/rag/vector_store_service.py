@@ -1,5 +1,6 @@
 from app.config import settings
 from app.services.rag.pinecone_client import pinecone_client
+from app.schemas.vector_store_schemas import PineconeUpsertRequest
 
 
 def upload_chunks(
@@ -22,8 +23,12 @@ def upload_chunks(
         )
 
         if len(vectors) >= batch_size:
-            pinecone_client.upsert(vectors=vectors, namespace=namespace)
+            pinecone_client.upsert(
+                upsert_request=PineconeUpsertRequest(vectors=vectors, namespace=namespace)
+            )
             vectors = []
 
     if vectors:
-        pinecone_client.upsert(vectors=vectors, namespace=namespace)
+        pinecone_client.upsert(
+            upsert_request=PineconeUpsertRequest(vectors=vectors, namespace=namespace)
+        )

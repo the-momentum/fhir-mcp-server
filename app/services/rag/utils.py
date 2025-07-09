@@ -1,17 +1,19 @@
 import hashlib
+from app.schemas.vector_store_schemas import PineconeSearchResponse
 
 
-def convert_pinecone_response_to_json(pinecone_response) -> list[dict]:
+def convert_pinecone_response_to_json(
+    pinecone_response,
+) -> list[PineconeSearchResponse]:
     hits = pinecone_response.get("result", {}).get("hits", [])
     converted = []
     for hit in hits:
         converted.append(
-            {
-                "fhir_document_id": hit.get("fhir_document_id"),
-                "score": hit.get("_score"),
-                "category": (hit["fields"].get("category") if "fields" in hit else None),
-                "chunk_text": (hit["fields"].get("chunk_text") if "fields" in hit else None),
-            }
+            PineconeSearchResponse(
+                fhir_document_id=hit.get("fhir_document_id"),
+                score=hit.get("_score"),
+                chunk_text=hit.get("fields", {}).get("chunk_text"),
+            )
         )
     return converted
 

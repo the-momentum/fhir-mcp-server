@@ -4,6 +4,11 @@ from app.services.medplum.medplum_client import medplum_client
 from app.schemas.fhir_schemas import FhirQueryResponse, FhirQueryRequest, FhirError
 from app.services.rag.pinecone_client import pinecone_client
 from app.services.rag.document_processor import document_processor
+from app.schemas.vector_store_schemas import (
+    PineconeSearchResponse,
+    PineconeSearchRequest,
+    PineconeError,
+)
 
 document_reference_router = FastMCP(name="Document Reference Request MCP")
 
@@ -66,49 +71,74 @@ async def request_document_reference_resource(
 #     return text
 
 
+# @document_reference_router.tool
+# async def check_if_pinecone_document_exists(
+#     fhir_document_id: str,
+# ) -> bool | PineconeError:
+#     """
+#     Checks if a document exists in the Pinecone index by FHIR DocumentReference ID.
+
+#     Args:
+#         fhir_document_id: ID of the FHIR DocumentReference resource
+
+#     Returns:
+#         True if the document exists, False otherwise
+#     """
+#     try:
+#         return pinecone_client.check_if_document_exists(
+#             fhir_document_id=fhir_document_id
+#         )
+#     except Exception as e:
+#         return PineconeError(error_message=str(e))
+
+
 @document_reference_router.tool
-async def check_if_pinecone_document_exists(fhir_document_id: str) -> bool:
-    """
-    Checks if a document exists in the Pinecone index by FHIR DocumentReference ID.
-
-    Args:
-        fhir_document_id: ID of the FHIR DocumentReference resource
-
-    Returns:
-        True if the document exists, False otherwise
-    """
-    return pinecone_client.check_if_document_exists(fhir_document_id=fhir_document_id)
-
-
-@document_reference_router.tool
-async def search_pinecone(query: str, fhir_document_id: str, top_k: int = 10) -> list[dict]:
+async def search_pinecone(
+    query: PineconeSearchRequest, fhir_document_id: str, top_k: int = 10
+) -> list[PineconeSearchResponse] | PineconeError:
     """
     Searches the Pinecone index for the given query by FHIR DocumentReference ID.
-    Use this tool to search the Pinecone index for the given query by FHIR DocumentReference ID.
+    Use this tool when the user asks for information from the documents.
     Rules:
-        - First check if the document exists in the Pinecone index using the check_if_pinecone_document_exists tool.
-        - If the document exists, use this tool to search the Pinecone index for the given query.
-        - If the document does not exist, use the add_pdf_to_pinecone tool to add the PDF file to the Pinecone index.
+        - if the error says "Document does not exist in Pinecone index", use appropriate tool to add the PDF file to the Pinecone index.
 
     Args:
         query: Query to search for
         fhir_document_id: ID of the FHIR DocumentReference resource
         top_k: Number of results to return
+
+    Returns:
+        List of PineconeSearchResponse objects
     """
-    return pinecone_client.search(query=query, fhir_document_id=fhir_document_id, top_k=top_k)
+    try:
+        if not pinecone_client.check_if_document_exists(fhir_document_id=fhir_document_id):
+            return PineconeError(error_message="Document does not exist in Pinecone index")
+        return pinecone_client.search(
+            query=query,
+            fhir_document_id=fhir_document_id,
+            top_k=top_k,
+        )
+    except Exception as e:
+        return PineconeError(error_message=str(e))
 
 
 @document_reference_router.tool
-async def add_pdf_to_pinecone(url: str, fhir_document_id: str):
+async def add_pdf_to_pinecone(url: str, fhir_document_id: str) -> bool | PineconeError:
     """
     Adds a PDF file to the Pinecone index.
     Use this tool to add a PDF file to the Pinecone index.
-    Rules:
-        - First check if the document exists in the Pinecone index using the check_if_pinecone_document_exists tool.
-        - If the document does not exist, use this tool to add the PDF file to the Pinecone index, otherwise say that the document already exists.
 
     Args:
         url: URL of the PDF file
         fhir_document_id: ID of the FHIR DocumentReference resource
+
+    Returns:
+        True if the PDF file is added to the Pinecone index, False if the document already exists
     """
-    document_processor.process_pdf(url=url, fhir_document_id=fhir_document_id)
+    try:
+        if not pinecone_client.check_if_document_exists(fhir_document_id=fhir_document_id):
+            document_processor.process_pdf(url=url, fhir_document_id=fhir_document_id)
+            return True
+        return False
+    except Exception as e:
+        return PineconeError(error_message=str(e))
