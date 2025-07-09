@@ -4,7 +4,10 @@ from app.services.rag.document_service import (
     bytes_to_text,
     chunk_text,
 )
-from app.services.rag.vector_store_service import upload_chunks
+from app.services.rag.vector_store_service import (
+    get_chunks_embeddings,
+    upload_embeddings,
+)
 
 
 class DocumentProcessor:
@@ -17,7 +20,10 @@ class DocumentProcessor:
         pdf_bytes = download_pdf_bytes(url=url)
         text = bytes_to_text(bytes=pdf_bytes)
         chunks = chunk_text(text)
-        upload_chunks(
+        embeddings = get_chunks_embeddings(chunks)
+
+        upload_embeddings(
+            embeddings=embeddings,
             chunks=chunks,
             source_url=url,
             fhir_document_id=fhir_document_id,

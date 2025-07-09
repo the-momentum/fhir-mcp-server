@@ -5,14 +5,16 @@ from app.schemas.vector_store_schemas import PineconeSearchResponse
 def convert_pinecone_response_to_json(
     pinecone_response,
 ) -> list[PineconeSearchResponse]:
-    hits = pinecone_response.get("result", {}).get("hits", [])
+    matches = pinecone_response.get("matches", [])
     converted = []
-    for hit in hits:
+    for match in matches:
         converted.append(
             PineconeSearchResponse(
-                fhir_document_id=hit.get("fhir_document_id"),
-                score=hit.get("_score"),
-                chunk_text=hit.get("fields", {}).get("chunk_text"),
+                chunk_text=match.get("metadata", {}).get("chunk_text"),
+                chunk_index=match.get("metadata", {}).get("chunk_index"),
+                fhir_document_id=match.get("metadata", {}).get("fhir_document_id"),
+                source_url=match.get("metadata", {}).get("source_url"),
+                score=match.get("score"),
             )
         )
     return converted

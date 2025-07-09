@@ -8,30 +8,32 @@ from app.schemas.vector_store_schemas import (
     PineconeUpsertRequest,
     PineconeError,
 )
+from app.services.rag.semantic_embedder import SemanticEmbedder
 
 
 class PineconeClient:
     def __init__(self):
         self.pc = Pinecone(api_key=settings.PINECONE_API_KEY.get_secret_value())
+        self.embedder = SemanticEmbedder(model_name=settings.EMBEDDING_MODEL)
         self.index = create_index_if_not_exists(
             pc=self.pc,
             index_name=settings.PINECONE_INDEX_NAME,
-            embed_model=settings.EMBEDDING_MODEL,
-            dimension=settings.PINECONE_DIMENSION,
-            metric=settings.PINECONE_METRIC,
+            dimension=settings.VECTOR_DIMENSION,
+            metric=settings.EMBED_METRIC,
             cloud=settings.PINECONE_CLOUD,
             region=settings.PINECONE_REGION,
-            field_map={"text": "chunk_text"},
         )
 
-    def upsert(
+    def upsert_vectors(
         self,
         upsert_request: PineconeUpsertRequest,
     ) -> None | PineconeError:
         try:
-            self.index.upsert_records(
+            self.index.upsert(
                 namespace=upsert_request.namespace,
-                records=upsert_request.vectors,
+                vectors=[
+                    (vector.id, vector.values, vector.metadata) for vector in upsert_request.vector
+                ],
             )
             return None
         except Exception as e:
@@ -39,21 +41,19 @@ class PineconeClient:
 
     def search(
         self,
-        query: PineconeSearchRequest,
+        embedded_query: PineconeSearchRequest,
         fhir_document_id: str,
         top_k: int = 10,
         namespace: str = settings.PINECONE_NAMESPACE,
     ) -> list[PineconeSearchResponse] | PineconeError:
         try:
-            results = self.index.search(
+            results = self.index.query(
                 namespace=namespace,
-                query={
-                    "top_k": top_k,
-                    "inputs": {"text": query.query},
-                    "filter": {"fhir_document_id": fhir_document_id},
-                },  # type: ignore
+                vector=embedded_query.embedded_query,
+                top_k=top_k,
+                filter={"fhir_document_id": fhir_document_id},
+                include_metadata=True,
             )
-
             return convert_pinecone_response_to_json(results)
         except Exception as e:
             return PineconeError(error_message=str(e))

@@ -46,12 +46,12 @@ class Settings(BaseSettings):
     PINECONE_CLOUD: str = "aws"
     PINECONE_REGION: str = "us-east-1"
     # RAG
-    EMBEDDING_MODEL: str = "llama-text-embed-v2"  # "text-embedding-3-small"
+    EMBEDDING_MODEL: str = "NeuML/pubmedbert-base-embeddings"
     CHUNK_SIZE: int = 1000
     CHUNK_OVERLAP: int = 200
-    PINECONE_DIMENSION: int = 1024
-    PINECONE_METRIC: str = "cosine"
-    PINECONE_BATCH_SIZE: int = 96
+    VECTOR_DIMENSION: int = 768
+    EMBED_METRIC: str = "cosine"
+    EMBED_BATCH_SIZE: int = 96
 
     @field_validator("*", mode="after")
     def _decryptor(cls, v, validation_info: ValidationInfo, *args, **kwargs):

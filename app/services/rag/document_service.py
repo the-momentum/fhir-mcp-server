@@ -1,12 +1,14 @@
 import requests
 import fitz
-from langchain.text_splitter import RecursiveCharacterTextSplitter
-from app.config import settings
+from llama_index.core.node_parser import SemanticSplitterNodeParser
+from app.services.rag.pinecone_client import pinecone_client
+from llama_index.core.schema import Document
 
 
-text_splitter = RecursiveCharacterTextSplitter(
-    chunk_size=settings.CHUNK_SIZE,
-    chunk_overlap=settings.CHUNK_OVERLAP,
+text_splitter = SemanticSplitterNodeParser(
+    buffer_size=1,
+    breakpoint_percentile_threshold=95,
+    embed_model=pinecone_client.embedder.model,
 )
 
 
@@ -20,10 +22,10 @@ def bytes_to_text(bytes: bytes) -> str:
     doc = fitz.open(stream=bytes, filetype="pdf")
     text = ""
     for page in doc:
-        text += page.get_text()  # type: ignore
-    doc.close()
+        text += page.get_text()
     return text
 
 
 def chunk_text(text: str) -> list[str]:
-    return text_splitter.split_text(text)
+    nodes = text_splitter.get_nodes_from_documents([Document(text=text)])
+    return [node.get_content() for node in nodes]
