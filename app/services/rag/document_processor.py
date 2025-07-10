@@ -1,6 +1,6 @@
 from app.config import settings
 from app.services.rag.document_service import (
-    download_pdf_bytes,
+    download_bytes,
     bytes_to_text,
     chunk_text,
 )
@@ -8,25 +8,25 @@ from app.services.rag.vector_store_service import (
     get_chunks_embeddings,
     upload_embeddings,
 )
+from app.schemas.document_schemas import Document
 
 
 class DocumentProcessor:
     def process_document(
         self,
-        url: str,
-        fhir_document_id: str,
+        document: Document,
         namespace: str = settings.PINECONE_NAMESPACE,
     ) -> None:
-        pdf_bytes = download_pdf_bytes(url=url)
-        text = bytes_to_text(bytes=pdf_bytes)
+        pdf_bytes = download_bytes(url=document.url)
+        text = bytes_to_text(file_bytes=pdf_bytes, filetype=document.format)
         chunks = chunk_text(text)
         embeddings = get_chunks_embeddings(chunks)
 
         upload_embeddings(
             embeddings=embeddings,
             chunks=chunks,
-            source_url=url,
-            fhir_document_id=fhir_document_id,
+            source_url=document.url,
+            fhir_document_id=document.fhir_document_id,
             namespace=namespace,
         )
 

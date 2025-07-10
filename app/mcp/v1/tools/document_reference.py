@@ -10,6 +10,7 @@ from app.schemas.vector_store_schemas import (
     PineconeError,
 )
 from app.services.rag.search_query_processor import search_query_processor
+from app.schemas.document_schemas import Document
 
 document_reference_router = FastMCP(name="Document Reference Request MCP")
 
@@ -55,7 +56,7 @@ async def request_document_reference_resource(
 
 
 @document_reference_router.tool
-async def add_document_to_pinecone(url: str, fhir_document_id: str) -> str | PineconeError:
+async def add_document_to_pinecone(document: Document) -> str | PineconeError:
     """
     IMPORTANT: Always inform the user at the beginning of your response that this search operation may take some time because the embedding model will be loaded into cache.
     Adds a document to the Pinecone vector index for the specified FHIR DocumentReference ID.
@@ -63,20 +64,25 @@ async def add_document_to_pinecone(url: str, fhir_document_id: str) -> str | Pin
     This tool should be used to ingest new documents into the Pinecone index.
 
     Rules:
+        - If you cannot determine the format of the document fitting the format from the list, provide the format as None.
         - After adding the document, the Pinecone index may take up to 1 minute to update before the document is searchable.
 
     Args:
         url (str): The URL of the document to be added.
         fhir_document_id (str): The ID of the FHIR DocumentReference resource corresponding to the document.
+        format (literal | None): The format of the document.
 
     Returns:
         str: Confirmation message that the document was added or already exists.
         PineconeError: Error object with a message if the operation fails.
     """
     try:
-        if not pinecone_client.check_if_document_exists(fhir_document_id=fhir_document_id):
-            document_processor.process_document(url=url, fhir_document_id=fhir_document_id)
+        if not document.format:
+            return PineconeError(error_message="Document format is required")
+        if not pinecone_client.check_if_document_exists(fhir_document_id=document.fhir_document_id):
+            document_processor.process_document(document=document)
             return "Document added to Pinecone index"
+
         return "Document already exists in Pinecone index"
     except Exception as e:
         return PineconeError(error_message=str(e))
