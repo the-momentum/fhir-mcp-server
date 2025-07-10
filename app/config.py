@@ -47,8 +47,6 @@ class Settings(BaseSettings):
     PINECONE_REGION: str = "us-east-1"
     # RAG
     EMBEDDING_MODEL: str = "NeuML/pubmedbert-base-embeddings"
-    CHUNK_SIZE: int = 1000
-    CHUNK_OVERLAP: int = 200
     VECTOR_DIMENSION: int = 768
     EMBED_METRIC: str = "cosine"
     EMBED_BATCH_SIZE: int = 96
