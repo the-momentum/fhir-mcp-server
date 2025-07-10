@@ -50,7 +50,7 @@ class Settings(BaseSettings):
     VECTOR_DIMENSION: int = 768
     EMBED_METRIC: str = "cosine"
     EMBED_BATCH_SIZE: int = 96
-    TOP_K: int = 10
+    TOP_K_RETRIEVAL_RESULTS: int = 10
 
     @field_validator("*", mode="after")
     def _decryptor(cls, v, validation_info: ValidationInfo, *args, **kwargs):

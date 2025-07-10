@@ -9,7 +9,7 @@ from app.schemas.vector_store_schemas import (
 
 class SearchQueryProcessor:
     def process_query(
-        self, query: str, fhir_document_id: str, top_k: int = settings.TOP_K
+        self, query: str, fhir_document_id: str, top_k: int = settings.TOP_K_RETRIEVAL_RESULTS
     ) -> list[PineconeSearchResponse] | PineconeError:
         embedded_query = pinecone_client.embedder.embed_texts(texts=[query]).vectors[0]
         return pinecone_client.search(

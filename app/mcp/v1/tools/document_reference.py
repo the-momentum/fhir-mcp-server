@@ -85,7 +85,7 @@ async def add_pdf_to_pinecone(url: str, fhir_document_id: str) -> str | Pinecone
 
 @document_reference_router.tool
 async def search_pinecone(
-    query: str, fhir_document_id: str, top_k: int = settings.TOP_K
+    query: str, fhir_document_id: str, top_k: int = settings.TOP_K_RETRIEVAL_RESULTS
 ) -> list[PineconeSearchResponse] | PineconeError:
     """
     Searches the Pinecone vector index for information related to the given document by FHIR DocumentReference ID.
