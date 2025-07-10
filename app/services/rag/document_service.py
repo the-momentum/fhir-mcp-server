@@ -23,10 +23,7 @@ def download_pdf_bytes(url: str) -> bytes:
 
 def bytes_to_text(bytes: bytes) -> str:
     doc = fitz.open(stream=bytes, filetype="pdf")
-    text = ""
-    for page in doc:
-        text += page.get_text()
-    return text
+    return "".join([page.get_text() for page in doc])
 
 
 def chunk_text(text: str) -> list[str]:

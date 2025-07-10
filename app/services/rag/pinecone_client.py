@@ -43,7 +43,7 @@ class PineconeClient:
         self,
         embedded_query: PineconeSearchRequest,
         fhir_document_id: str,
-        top_k: int = 10,
+        top_k: int = settings.TOP_K,
         namespace: str = settings.PINECONE_NAMESPACE,
     ) -> list[PineconeSearchResponse] | PineconeError:
         try:

@@ -1,3 +1,4 @@
+from app.config import settings
 from fastmcp import FastMCP
 
 from app.services.medplum.medplum_client import medplum_client
@@ -84,7 +85,7 @@ async def add_pdf_to_pinecone(url: str, fhir_document_id: str) -> str | Pinecone
 
 @document_reference_router.tool
 async def search_pinecone(
-    query: str, fhir_document_id: str, top_k: int = 10
+    query: str, fhir_document_id: str, top_k: int = settings.TOP_K
 ) -> list[PineconeSearchResponse] | PineconeError:
     """
     Searches the Pinecone vector index for information related to the given document by FHIR DocumentReference ID.
