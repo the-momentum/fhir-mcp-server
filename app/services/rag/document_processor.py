@@ -11,7 +11,7 @@ from app.services.rag.vector_store_service import (
 
 
 class DocumentProcessor:
-    def process_pdf(
+    def process_document(
         self,
         url: str,
         fhir_document_id: str,

@@ -55,16 +55,15 @@ async def request_document_reference_resource(
 
 
 @document_reference_router.tool
-async def add_pdf_to_pinecone(url: str, fhir_document_id: str) -> str | PineconeError:
+async def add_document_to_pinecone(url: str, fhir_document_id: str) -> str | PineconeError:
     """
+    IMPORTANT: Always inform the user at the beginning of your response that this search operation may take some time because the embedding model will be loaded into cache.
     Adds a document to the Pinecone vector index for the specified FHIR DocumentReference ID.
 
     This tool should be used to ingest new documents into the Pinecone index.
 
-    Important instructions for using this tool:
-    - Inform the user clearly that this process may take some time because the model will be loaded into cache.
-    - After adding the PDF, the Pinecone index may take up to 1 minute to update before the document is searchable.
-    - The user can verify the index update by running a search with the 'search_pinecone' tool.
+    Rules:
+        - After adding the document, the Pinecone index may take up to 1 minute to update before the document is searchable.
 
     Args:
         url (str): The URL of the document to be added.
@@ -76,9 +75,9 @@ async def add_pdf_to_pinecone(url: str, fhir_document_id: str) -> str | Pinecone
     """
     try:
         if not pinecone_client.check_if_document_exists(fhir_document_id=fhir_document_id):
-            document_processor.process_pdf(url=url, fhir_document_id=fhir_document_id)
-            return "PDF file added to Pinecone index"
-        return "PDF file already exists in Pinecone index"
+            document_processor.process_document(url=url, fhir_document_id=fhir_document_id)
+            return "Document added to Pinecone index"
+        return "Document already exists in Pinecone index"
     except Exception as e:
         return PineconeError(error_message=str(e))
 
@@ -88,21 +87,23 @@ async def search_pinecone(
     query: str, fhir_document_id: str, top_k: int = settings.TOP_K_RETRIEVAL_RESULTS
 ) -> list[PineconeSearchResponse] | PineconeError:
     """
+    IMPORTANT: Always inform the user at the beginning of your response that this search operation may take some time because the embedding model will be loaded into cache.
     Searches the Pinecone vector index for information related to the given document by FHIR DocumentReference ID.
 
-    This tool should be used when the user requests information specifically from the documents.
+    Use this tool when the user requests information from the documents, notes, etc.
 
-    Important instructions for using this tool:
-    - Translate the user's query into the language of the documents before performing the search.
-    - Inform the user clearly that the search might take some time because the model will be loaded into cache.
-    - If the error message "Document does not exist in Pinecone index" is returned, automatically trigger the 'add_pdf_to_pinecone' tool to add the missing PDF document to the index.
-    - Base all answers strictly on the content found in the Pinecone index documents.
-    - If the user's question is unrelated to the indexed documents, respond that the information is not available in the documents.
-    - If the query is unclear or ambiguous, ask the user to clarify or provide more details.
+    Rules:
+        - Firstly, prepare fhir_document_id by running the appropriate tool.
+        - If the error message "Document does not exist in Pinecone index" is returned, automatically trigger the 'add_document_to_pinecone' tool to add the missing document to the index.
+        - Translate the user's query into the language of the document before performing the search.
+        - Base all answers strictly on the content found in the Pinecone index documents.
+        - If the user's question is unrelated to the indexed documents, respond that the information is not available in the documents.
+        - If the query is unclear or ambiguous, ask the user to clarify or provide more details.
+        - You can modify the query to make it more specific and relevant to the document.
 
     Args:
         query (str): The user's search query.
-        fhir_document_id (str): The ID of the FHIR DocumentReference resource to search within.
+        fhir_document_id (str): The ID of the FHIR DocumentReference resource to search within - it is the same as the FHIR ID of the document.
         top_k (int, optional): The maximum number of search results to return. Defaults to 10.
 
     Returns:
@@ -112,6 +113,7 @@ async def search_pinecone(
     try:
         if not pinecone_client.check_if_document_exists(fhir_document_id=fhir_document_id):
             return PineconeError(error_message="Document does not exist in Pinecone index")
+
         return search_query_processor.process_query(
             query=query, fhir_document_id=fhir_document_id, top_k=top_k
         )
