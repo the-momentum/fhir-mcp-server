@@ -40,6 +40,18 @@ class Settings(BaseSettings):
     LOINC_MAX_CODES: int = 5
     LOINC_MAX_FETCH: int = 50
 
+    PINECONE_API_KEY: SecretStr = SecretStr("")
+    PINECONE_NAMESPACE: str = "fhir-papers"
+    PINECONE_INDEX_NAME: str = "fhir-mcp-server"
+    PINECONE_CLOUD: str = "aws"
+    PINECONE_REGION: str = "us-east-1"
+    # RAG
+    EMBEDDING_MODEL: str = "NeuML/pubmedbert-base-embeddings"
+    VECTOR_DIMENSION: int = 768
+    EMBED_METRIC: str = "cosine"
+    EMBED_BATCH_SIZE: int = 96
+    TOP_K: int = 10
+
     @field_validator("*", mode="after")
     def _decryptor(cls, v, validation_info: ValidationInfo, *args, **kwargs):
         if isinstance(v, EncryptedField):

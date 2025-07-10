@@ -1,4 +1,5 @@
 FROM python:3.13-slim AS builder
+
 RUN apt-get update && \
   apt-get install -y --no-install-recommends build-essential libpq-dev && \
   apt-get clean && \
@@ -29,6 +30,9 @@ COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
 
 COPY --from=builder /root_project /root_project
 
+
 EXPOSE 8000
+
+RUN uv run python scripts/start/load_models.py
 
 CMD ["uv", "run", "python", "start.py"]
