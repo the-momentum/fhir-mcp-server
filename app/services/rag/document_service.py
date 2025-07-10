@@ -1,15 +1,18 @@
 import requests
+from functools import lru_cache
 import fitz
 from llama_index.core.node_parser import SemanticSplitterNodeParser
 from app.services.rag.pinecone_client import pinecone_client
 from llama_index.core.schema import Document
 
 
-text_splitter = SemanticSplitterNodeParser(
-    buffer_size=1,
-    breakpoint_percentile_threshold=95,
-    embed_model=pinecone_client.embedder.model,
-)
+@lru_cache(maxsize=1)
+def get_text_splitter() -> SemanticSplitterNodeParser:
+    return SemanticSplitterNodeParser(
+        buffer_size=1,
+        breakpoint_percentile_threshold=95,
+        embed_model=pinecone_client.embedder.model,
+    )
 
 
 def download_pdf_bytes(url: str) -> bytes:
@@ -27,5 +30,6 @@ def bytes_to_text(bytes: bytes) -> str:
 
 
 def chunk_text(text: str) -> list[str]:
+    text_splitter = get_text_splitter()
     nodes = text_splitter.get_nodes_from_documents([Document(text=text)])
     return [node.get_content() for node in nodes]
