@@ -1,13 +1,14 @@
 import requests
-from functools import lru_cache
-import fitz
-from llama_index.core.node_parser import SemanticSplitterNodeParser
-from app.services.rag.pinecone_client import pinecone_client
-from llama_index.core.schema import Document
 import chardet
 import io
 import csv
 import json
+import fitz
+
+from functools import lru_cache
+from llama_index.core.node_parser import SemanticSplitterNodeParser
+from app.services.rag.pinecone_client import pinecone_client
+from llama_index.core.schema import Document
 
 
 @lru_cache(maxsize=1)
@@ -44,10 +45,12 @@ def bytes_to_text(file_bytes: bytes, filetype: str | None = None) -> str:
         f = io.StringIO(file_bytes.decode(encoding))
         reader = csv.reader(f)
         return "\n".join([", ".join(row) for row in reader])
+
     elif filetype == "json":
         encoding = detect_encoding(file_bytes)
         data = json.loads(file_bytes.decode(encoding))
         return json.dumps(data, indent=2, ensure_ascii=False)
+
     raise ValueError("Filetype is required")
 
 
