@@ -14,6 +14,10 @@ build:	## Builds docker image
 run:	## Runs the envionment in detached mode
 	$(DOCKER_COMMAND) up -d --force-recreate
 
+uv:
+	uv sync --frozen
+	$(UV) python scripts/start/load_models.py
+
 up:	## Runs the non-detached environment
 	$(DOCKER_COMMAND) up --force-recreate
 
