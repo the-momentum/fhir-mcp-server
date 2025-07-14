@@ -252,7 +252,7 @@ Have a suggestion? We'd love to hear from you! Contact us or contribute directly
 
 ## 📄 License
 
-Distributed under the MIT License.
+Distributed under the MIT License. See [MIT License](LICENSE) for more information.
 
 ---
 
