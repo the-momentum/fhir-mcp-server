@@ -27,7 +27,7 @@ class AccessTokenManager:
     Args:
         client_id (str)
         client_secret (str)
-        base_url (str): The base URL of the Medplum server
+        base_url (str): The base URL of the FHIR server
     """
 
     def __init__(
@@ -46,7 +46,7 @@ class AccessTokenManager:
             "client_secret": self.client_secret,
         }
         response = requests.post(
-            auth_url, data=client_credentials, timeout=settings.MEDPLUM_TIMEOUT
+            auth_url, data=client_credentials, timeout=settings.FHIR_SERVER_TIMEOUT
         )
         if response.status_code != status.HTTP_200_OK:
             raise HTTPException(

@@ -6,7 +6,7 @@ from app.mcp.exceptions import APICustomError
 
 def handle_requests_exceptions(e: Exception, url: str) -> None:
     """
-    Handle all possible request exceptions from the Medplum API.
+    Handle all possible request exceptions from the FHIR API.
 
     Args:
         e: The caught exception
@@ -20,21 +20,21 @@ def handle_requests_exceptions(e: Exception, url: str) -> None:
         response = e.response
         raise APICustomError(
             status=response.status_code if response else status.HTTP_500_INTERNAL_SERVER_ERROR,
-            code="medplum_api_error",
-            message=f"Medplum API returned HTTP error: {response.text if response else str(e)}",
+            code="fhir_api_error",
+            message=f"FHIR API returned HTTP error: {response.text if response else str(e)}",
             ctx={"url": url},
         )
     elif isinstance(e, requests.exceptions.RequestException):
         raise APICustomError(
             status=status.HTTP_502_BAD_GATEWAY,
-            code="medplum_connection_error",
-            message="Failed to connect to Medplum API.",
+            code="fhir_connection_error",
+            message="Failed to connect to FHIR API.",
         )
     elif isinstance(e, ValueError):
         raise APICustomError(
             status=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            code="medplum_invalid_response",
-            message="Medplum API returned invalid JSON.",
+            code="fhir_invalid_response",
+            message="FHIR API returned invalid JSON.",
         )
     else:
         raise APICustomError(

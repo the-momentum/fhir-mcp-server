@@ -1,6 +1,6 @@
 from functools import lru_cache
 from pathlib import Path
-from pydantic import AnyHttpUrl, ValidationInfo, field_validator, SecretStr
+from pydantic import ValidationInfo, field_validator, SecretStr
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 from app.utils.config_utils import EncryptedField, EnvironmentType
@@ -17,20 +17,16 @@ class Settings(BaseSettings):
     DEBUG: bool = False
     ENVIRONMENT: EnvironmentType = EnvironmentType.TEST
 
-    BACKEND_CORS_ORIGINS: list[AnyHttpUrl] = []
-    BACKEND_CORS_ALLOW_ALL: bool = False
-
     LOGGING_CONF_FILE: str = "logging.conf"
 
     DATABASE_URI: str = ""  # TODO add db if required
 
-    # MEDPLUM
-    MEDPLUM_HOST: str = "https://api.medplum.com"
+    # FHIR SERVER
+    FHIR_SERVER_HOST: str = "https://api.medplum.com"
     FHIR_BASE_URL: str = "/fhir/R4"
-    MEDPLUM_APP_URL: str = "https://app.medplum.com"
-    MEDPLUM_CLIENT_ID: str = ""
-    MEDPLUM_CLIENT_SECRET: SecretStr = SecretStr("")
-    MEDPLUM_TIMEOUT: int = 20
+    FHIR_SERVER_CLIENT_ID: str = ""
+    FHIR_SERVER_CLIENT_SECRET: SecretStr = SecretStr("")
+    FHIR_SERVER_TIMEOUT: int = 20
 
     # LOINC
     LOINC_ENDPOINT: str = "https://loinc.regenstrief.org/searchapi/loincs"
@@ -57,14 +53,6 @@ class Settings(BaseSettings):
         if isinstance(v, EncryptedField):
             return v.get_decrypted_value(validation_info.data["FERNET_DECRYPTOR"])
         return v
-
-    @field_validator("BACKEND_CORS_ORIGINS", mode="after")
-    def assemble_cors_origins(cls, v: str | list[str]) -> list[str] | str:
-        if isinstance(v, str) and not v.startswith("["):
-            return [i.strip() for i in v.split(",")]
-        elif isinstance(v, (list, str)):
-            return v
-        raise ValueError(v)
 
     model_config = SettingsConfigDict(
         case_sensitive=True,

@@ -1,7 +1,7 @@
 from app.config import settings
 from fastmcp import FastMCP
 
-from app.services.medplum.medplum_client import medplum_client
+from app.services.fhir.fhir_client import fhir_client
 from app.schemas.fhir_schemas import FhirQueryResponse, FhirQueryRequest, FhirError
 from app.services.rag.pinecone_client import pinecone_client
 from app.services.rag.document_processor import document_processor
@@ -39,7 +39,7 @@ async def request_document_reference_resource(
     """
 
     try:
-        response = medplum_client.request(
+        response = fhir_client.request(
             method=request.method,
             path=request.path,
             json=request.body,
@@ -77,6 +77,8 @@ async def add_document_to_pinecone(document: Document) -> str | PineconeError:
         PineconeError: Error object with a message if the operation fails.
     """
     try:
+        if not pinecone_client:
+            return PineconeError(error_message="Pinecone client is not initialized")
         if not document.format:
             return PineconeError(error_message="Document format is required")
         if not pinecone_client.check_if_document_exists(fhir_document_id=document.fhir_document_id):
@@ -117,6 +119,8 @@ async def search_pinecone(
         PineconeError: Error object with a message if the search fails.
     """
     try:
+        if not pinecone_client:
+            return PineconeError(error_message="Pinecone client is not initialized")
         if not pinecone_client.check_if_document_exists(fhir_document_id=fhir_document_id):
             return PineconeError(error_message="Document does not exist in Pinecone index")
 

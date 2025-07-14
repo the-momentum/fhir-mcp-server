@@ -2,36 +2,36 @@ import requests
 
 from app.config import settings
 from app.schemas.fhir_schemas import FhirQueryResponse, FhirMethod
-from app.services.medplum.errors import handle_requests_exceptions
-from app.services.medplum.token_manager import AccessTokenManager
+from app.services.fhir.errors import handle_requests_exceptions
+from app.services.fhir.token_manager import AccessTokenManager
 from app.utils.auth import BearerAuth
 
 
-class MedplumClient:
+class FhirClient:
     """
-    A client for interacting with the Medplum FHIR API.
+    A client for interacting with the FHIR API.
 
-    This class provides a wrapper around the Medplum API, handling authentication
+    This class provides a wrapper around the FHIR API, handling authentication
     and request management. It uses the AccessTokenManager to maintain valid tokens
     for API requests.
 
     Attributes:
-        base_url (str): The base URL of the Medplum API server
+        base_url (str): The base URL of the FHIR API server
         token_manager (AccessTokenManager): Manages token lifecycle
     """
 
     def __init__(self):
-        """Initialize the Medplum client with settings configuration."""
-        self.base_url = settings.MEDPLUM_HOST + settings.FHIR_BASE_URL
+        """Initialize the FHIR server client with settings configuration."""
+        self.base_url = settings.FHIR_SERVER_HOST + settings.FHIR_BASE_URL
         self.token_manager = AccessTokenManager(
-            settings.MEDPLUM_CLIENT_ID,
-            settings.MEDPLUM_CLIENT_SECRET.get_secret_value(),
-            settings.MEDPLUM_HOST,
+            settings.FHIR_SERVER_CLIENT_ID,
+            settings.FHIR_SERVER_CLIENT_SECRET.get_secret_value(),
+            settings.FHIR_SERVER_HOST,
         )
 
     def request(self, method: FhirMethod, path: str, **kwargs) -> FhirQueryResponse:
         """
-        Performs a token-authenticated HTTP request to the Medplum API.
+        Performs a token-authenticated HTTP request to the FHIR API.
 
         Automatically adds the `Authorization: Bearer <token>` header to the request.
 
@@ -49,7 +49,7 @@ class MedplumClient:
 
         try:
             response = requests.request(
-                method, url, auth=auth, timeout=settings.MEDPLUM_TIMEOUT, **kwargs
+                method, url, auth=auth, timeout=settings.FHIR_SERVER_TIMEOUT, **kwargs
             )
             response.raise_for_status()
             return FhirQueryResponse(
@@ -63,4 +63,4 @@ class MedplumClient:
             raise e
 
 
-medplum_client = MedplumClient()
+fhir_client = FhirClient()

@@ -1,7 +1,7 @@
 from fastmcp import FastMCP
 
 from app.config import settings
-from app.services.medplum.medplum_client import medplum_client
+from app.services.fhir.fhir_client import fhir_client
 from app.schemas.fhir_schemas import FhirQueryResponse, FhirQueryRequest, FhirError
 from app.services.loinc_client import loinc_client
 
@@ -95,7 +95,7 @@ async def request_observation_resource(
     """
 
     try:
-        response = medplum_client.request(
+        response = fhir_client.request(
             method=request.method,
             path=request.path,
             json=request.body,

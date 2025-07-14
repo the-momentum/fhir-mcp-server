@@ -13,6 +13,8 @@ from llama_index.core.schema import Document
 
 @lru_cache(maxsize=1)
 def get_text_splitter() -> SemanticSplitterNodeParser:
+    if not pinecone_client:
+        raise ValueError("Pinecone client is not initialized")
     return SemanticSplitterNodeParser(
         buffer_size=1,
         breakpoint_percentile_threshold=95,

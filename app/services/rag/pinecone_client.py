@@ -1,4 +1,6 @@
+import sys
 from pinecone import Pinecone
+
 from app.config import settings
 from app.services.rag.utils import convert_pinecone_response_to_json
 from app.services.rag.pinecone_initializer import create_index_if_not_exists
@@ -72,4 +74,8 @@ class PineconeClient:
             return PineconeError(error_message=str(e))
 
 
-pinecone_client = PineconeClient()
+try:
+    pinecone_client: PineconeClient | None = PineconeClient()
+except Exception as e:
+    print(f"Error initializing Pinecone client: {e}", file=sys.stderr)
+    pinecone_client = None
