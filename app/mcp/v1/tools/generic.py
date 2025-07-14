@@ -4,7 +4,7 @@ This module contains the tool for making generic requests to the FHIR server, wh
 
 from fastmcp import FastMCP
 
-from app.services.medplum.medplum_client import medplum_client
+from app.services.fhir.fhir_client import fhir_client
 from app.schemas.fhir_schemas import FhirQueryResponse, FhirQueryRequest, FhirError
 
 
@@ -35,7 +35,7 @@ async def request_generic_resource(
     """
 
     try:
-        response = medplum_client.request(
+        response = fhir_client.request(
             method=request.method,
             path=request.path,
             json=request.body,

@@ -4,6 +4,8 @@ from app.schemas.vector_store_schemas import PineconeUpsertRequest, Embeddings, 
 
 
 def get_chunks_embeddings(chunks: list[str]) -> Embeddings:
+    if not pinecone_client:
+        raise ValueError("Pinecone client is not initialized")
     return pinecone_client.embedder.embed_texts(texts=chunks)
 
 
@@ -16,6 +18,8 @@ def upload_embeddings(
     namespace: str = settings.PINECONE_NAMESPACE,
 ) -> None:
     vectors = []
+    if not pinecone_client:
+        raise ValueError("Pinecone client is not initialized")
 
     for i, (embedding, chunk) in enumerate(zip(embeddings.vectors, chunks)):
         vectors.append(
