@@ -246,7 +246,7 @@ Have a suggestion? We'd love to hear from you! Contact us or contribute directly
 
 ## 📄 License
 
-Distributed under the MIT License. See `LICENSE` for more information.
+Distributed under the MIT License.
 
 ---
 
