@@ -81,9 +81,15 @@ Follow these steps to set up FHIR MCP Server in your environment.
    ```
    Edit the `config/.env` file with your credentials and configuration. See [Environment Variables](#-Environment-Variables)
 
-3. **Build Docker image (for Docker-based execution)**:
+3. **Install Dependencies**
+
+   For Docker-based execution run:
    ```sh
    make build
+   ```
+   For uv-based execution run:
+   ```sh
+   make uv
    ```
 
 4. **Update the MCP Client configuration**
