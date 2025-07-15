@@ -98,7 +98,7 @@ Follow these steps to set up FHIR MCP Server in your environment.
 
 - **Docker**
 
-   ```
+   ```json
    {
       "mcpServers": {
          "docker-mcp-server": {
@@ -135,7 +135,7 @@ Follow these steps to set up FHIR MCP Server in your environment.
       ```
    Then, update config file:
 
-   ```
+   ```json
    {
       "mcpServers": {
          "uv-mcp-server": {
