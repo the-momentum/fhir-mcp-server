@@ -13,6 +13,7 @@
 ## 📋 Table of Contents
 
 - [🔍 About](#-about-the-project)
+- [💡 Demo](#-demo)
 - [🚀 Getting Started](#-getting-started)
 - [📝 Usage](#-usage)
 - [🔧 Configuration](#-configuration)
@@ -49,6 +50,40 @@ The server is built with a modular architecture:
 - **LOINC Client**: Integration with LOINC API for terminology resolution and validation
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+## 💡 Demo 
+
+This demo shows how Claude uses the `fhir-mcp-server` to communicate with a FHIR server (in this case Medplum) to answer questions. You will see, among other things:
+
+- utilization of the `request_patient_resource` tool which retrieves basic patient information
+- utilization of the `request_condition_resource` tool to answer the question whether any of the previously diagnosed diseases may cause symptoms that the patient is currently complaining about
+- utilization of the `request_medication_resource`, `request_encounter_resource`, `request_generic_resource` tools to answer the question whether the patient has already received any treatment for hypertension
+
+You can observe how Claude automatically selects the tools worth using to answer the question based on the user's query.
+
+https://github.com/user-attachments/assets/3a3a8ed3-f881-447d-af03-5f24432a2cdd
+
+<details>
+<summary>Lab History Analysis</summary>
+
+Here you can observe how Claude first uses the tool searching for LOINC codes for the lipid panel specific codes, but not finding any related observations in FHIR server, it repeats the search for individual biomarkers that make up such a panel. 
+
+https://github.com/user-attachments/assets/2fb39801-d5d6-4461-bedd-9f58ab4d52ec
+
+</details>
+
+<details>
+<summary>FHIR Synthetic Data Generator</summary>
+
+Developers working with FHIR often need to generate specific test data to validate FHIR server functionality, such as search capabilities and data relationships. While you can use Synthea to generate synthetic data and then manually import the resulting bundles to your server, fhir-mcp-server streamlines this process by allowing you to generate and deploy test data directly through Claude.
+
+This eliminates the typical workflow of running Synthea separately, downloading bundles, and manually importing them to your FHIR server. Instead, you can create targeted test scenarios, generate appropriate synthetic data, and populate your server all within Claude's interface.
+
+https://github.com/user-attachments/assets/d87da1d8-6401-4a9e-a6f0-50ba23396e12
+
+**Note:** fhir-mcp-server was not designed with this use case in mind, so as you'll see in the demo, it doesn't work perfectly - what can be observed, however, is how well the LLM handles using trial and error to correct any wrong choices.
+
+</details>
 
 ## 🚀 Getting Started
 
