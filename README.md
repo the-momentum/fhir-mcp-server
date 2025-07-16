@@ -77,7 +77,7 @@ https://github.com/user-attachments/assets/2fb39801-d5d6-4461-bedd-9f58ab4d52ec
 
 Developers working with FHIR often need to generate specific test data to validate FHIR server functionality, such as search capabilities and data relationships. While you can use Synthea to generate synthetic data and then manually import the resulting bundles to your server, fhir-mcp-server streamlines this process by allowing you to generate and deploy test data directly through Claude.
 
-This eliminates the typical workflow of running Synthea separately, downloading bundles, and manually importing them to your FHIR server. Instead, you can create targeted test scenarios, generate appropriate synthetic data, and populate your server all within Claude's interface.
+This eliminates the typical workflow of running [synthea](https://github.com/synthetichealth/synthea) separately, downloading bundles, and manually importing them to your FHIR server. Instead, you can create targeted test scenarios, generate appropriate synthetic data, and populate your server all within Claude's interface.
 
 https://github.com/user-attachments/assets/d87da1d8-6401-4a9e-a6f0-50ba23396e12
 
