@@ -1,10 +1,16 @@
 import os
 from enum import Enum
 from typing import Any, Callable, Generator, Protocol
+from dotenv import load_dotenv
+
 from cryptography.fernet import Fernet
 from pydantic import ValidationInfo
 
 CallableGenerator = Generator[Callable[..., Any], None, None]
+
+dotenv_path = "config/.env"
+
+load_dotenv(dotenv_path)
 
 
 class EnvironmentType(str, Enum):
@@ -63,4 +69,4 @@ class FernetDecryptorField(str):
         master_key = os.environ.get(value)
         if not master_key:
             return FakeFernet()
-        return Fernet(os.environ[value])
+        return Fernet(master_key.encode())

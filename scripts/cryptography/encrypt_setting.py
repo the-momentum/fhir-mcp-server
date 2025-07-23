@@ -1,7 +1,12 @@
 import os
 import sys
+from dotenv import load_dotenv
 
 from cryptography.fernet import Fernet
+
+dotenv_path = "config/.env"
+
+load_dotenv(dotenv_path)
 
 if __name__ == "__main__":
     if "MASTER_KEY" not in os.environ:

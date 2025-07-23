@@ -7,9 +7,7 @@ from app.config import settings
 class LoincClient:
     def __init__(self):
         self.base_url = settings.LOINC_ENDPOINT
-        self.auth = HTTPBasicAuth(
-            settings.LOINC_USERNAME, settings.LOINC_PASSWORD.get_secret_value()
-        )
+        self.auth = HTTPBasicAuth(settings.LOINC_USERNAME, settings.LOINC_PASSWORD)
         self.code_record_url = f"{self.base_url}?query="
 
     def _get_loinc_code(
