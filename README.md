@@ -219,7 +219,6 @@ The FHIR MCP Server includes built-in encryption infrastructure to protect sensi
 
 2. **Encrypt Sensitive Values**:
    ```bash
-   # Encrypt a value
    python scripts/cryptography/encrypt_setting.py "your_secret_value"
    ```
 
