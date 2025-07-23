@@ -51,7 +51,7 @@ The server is built with a modular architecture:
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-## 💡 Demo 
+## 💡 Demo
 
 This demo shows how Claude uses the `fhir-mcp-server` to communicate with a FHIR server (in this case Medplum) to answer questions. You will see, among other things:
 
@@ -66,7 +66,7 @@ https://github.com/user-attachments/assets/3a3a8ed3-f881-447d-af03-5f24432a2cdd
 <details>
 <summary>Lab History Analysis</summary>
 
-Here you can observe how Claude first uses the tool searching for LOINC codes for the lipid panel specific codes, but not finding any related observations in FHIR server, it repeats the search for individual biomarkers that make up such a panel. 
+Here you can observe how Claude first uses the tool searching for LOINC codes for the lipid panel specific codes, but not finding any related observations in FHIR server, it repeats the search for individual biomarkers that make up such a panel.
 
 https://github.com/user-attachments/assets/2fb39801-d5d6-4461-bedd-9f58ab4d52ec
 
@@ -97,7 +97,7 @@ Follow these steps to set up FHIR MCP Server in your environment.
 - **FHIR Server Account**: Access to FHIR API (e.g. Medplum)
 - **Pinecone API key** (required for document search): Enables vector-based search over processed documents. Without it, semantic retrieval features will be unavailable.
 
-   👉 [Create Pinecone Account](https://login.pinecone.io/login?state=hKFo2SA0aWx5NHJWOG05TzlVSVFXXzBLT3R0eV9qTTZseFNqZ6FupWxvZ2luo3RpZNkgS3ZxdnB2RkVwdkxYYUxEX0pHSTk2aUpRVHBmS1VnMzOjY2lk2SBUOEkyaEc2Q2FaazUwT05McWhmN3h6a1I0WmhMcVM0Qw&client=T8I2hG6CaZk50ONLqhf7xzkR4ZhLqS4C&protocol=oauth2&scope=openid%20read%3Acurrent_user%20profile%20email%20offline_access&redirect_uri=https%3A%2F%2Fapp.pinecone.io&audience=https%3A%2F%2Fus-central1-production-console.cloudfunctions.net%2Fapi%2Fv1&sessionType=signup&response_type=code&response_mode=query&nonce=bHJWdUhVMi5kWlpNcVBDUmR2RVVxVHpyMGRBd3hUTzVhc3M3TmM5WV9Tfg%3D%3D&code_challenge=n3NYywUMQlnDmx5BtofH72xegxkA6FCyuyg9qtkh5Lk&code_challenge_method=S256&auth0Client=eyJuYW1lIjoiYXV0aDAtcmVhY3QiLCJ2ZXJzaW9uIjoiMi4zLjAifQ%3D%3D)
+   👉 [Create Pinecone Account](https://www.pinecone.io/)
 - **LOINC Account** (optional): Enables retrieval of the latest LOINC codes from the official API. Without it, the system relies on static or language model-inferred codes, which may be outdated or imprecise.
 
    👉[Create LOINC Account](https://loinc.org/join/)

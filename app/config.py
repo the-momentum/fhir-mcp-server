@@ -19,8 +19,6 @@ class Settings(BaseSettings):
 
     LOGGING_CONF_FILE: str = "logging.conf"
 
-    DATABASE_URI: str = ""  # TODO add db if required
-
     # FHIR SERVER
     FHIR_SERVER_HOST: str = "https://api.medplum.com"
     FHIR_BASE_URL: str = "/fhir/R4"

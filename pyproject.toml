@@ -17,10 +17,7 @@ dependencies = [
     "pydantic>=2.11.7",
     "pydantic-settings>=2.10.1",
     "pymupdf>=1.26.3",
-    "pypdf>=5.7.0",
     "sentence-transformers>=5.0.0",
-    "testcontainers>=4.10.0",
-    "testcontainers-postgres>=0.0.1rc1",
 ]
 
 [build-system]
