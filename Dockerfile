@@ -1,7 +1,7 @@
 FROM python:3.13-slim AS builder
 
 RUN apt-get update && \
-  apt-get install -y --no-install-recommends build-essential libpq-dev && \
+  apt-get install -y --no-install-recommends build-essential && \
   apt-get clean && \
   rm -rf /var/lib/apt/lists/*
 RUN pip install --no-cache-dir --upgrade pyopenssl
@@ -20,7 +20,7 @@ RUN uv sync --frozen --no-dev
 FROM python:3.13-slim
 
 RUN apt-get update && \
-  apt-get install -y --no-install-recommends libpq5 && \
+  apt-get install -y --no-install-recommends && \
   apt-get clean && \
   rm -rf /var/lib/apt/lists/*
 
