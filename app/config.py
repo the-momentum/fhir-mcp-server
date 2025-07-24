@@ -7,7 +7,7 @@ from app.utils.config_utils import EncryptedField, EnvironmentType, FernetDecryp
 
 
 class Settings(BaseSettings):
-    FERNET_DECRYPTOR: FernetDecryptorField = FernetDecryptorField("MASTER_KEY")
+    FERNET_DECRYPTOR: FernetDecryptorField | None = FernetDecryptorField("MASTER_KEY")
 
     PROJECT_NAME: str = "mcp-server"
     API_V1_STR: str = "/api/v1"
@@ -23,18 +23,18 @@ class Settings(BaseSettings):
     FHIR_SERVER_HOST: str = "https://api.medplum.com"
     FHIR_BASE_URL: str = "/fhir/R4"
     FHIR_SERVER_CLIENT_ID: str = ""
-    FHIR_SERVER_CLIENT_SECRET: EncryptedField
+    FHIR_SERVER_CLIENT_SECRET: EncryptedField = EncryptedField("")
     FHIR_SERVER_TIMEOUT: int = 20
 
     # LOINC
     LOINC_ENDPOINT: str = "https://loinc.regenstrief.org/searchapi/loincs"
     LOINC_USERNAME: str = ""
-    LOINC_PASSWORD: EncryptedField
+    LOINC_PASSWORD: EncryptedField = EncryptedField("")
     LOINC_TIMEOUT: int = 60
     LOINC_MAX_CODES: int = 5
     LOINC_MAX_FETCH: int = 50
 
-    PINECONE_API_KEY: EncryptedField
+    PINECONE_API_KEY: EncryptedField = EncryptedField("")
     PINECONE_NAMESPACE: str = "fhir-papers"
     PINECONE_INDEX_NAME: str = "fhir-mcp-server"
     PINECONE_CLOUD: str = "aws"
@@ -50,10 +50,10 @@ class Settings(BaseSettings):
         "LOINC_PASSWORD", "FHIR_SERVER_CLIENT_SECRET", "PINECONE_API_KEY", mode="after"
     )
     def _decrypt_encrypted_fields(cls, v, validation_info: ValidationInfo):
-        if isinstance(v, EncryptedField):
-            decryptor = validation_info.data.get("FERNET_DECRYPTOR")
-            if decryptor:
-                return v.get_decrypted_value(decryptor)
+        fernet_decryptor = validation_info.data.get("FERNET_DECRYPTOR")
+        if fernet_decryptor:
+            decrypted_value = v.get_decrypted_value(fernet_decryptor)
+            return str(decrypted_value)
         return v
 
     model_config = SettingsConfigDict(

@@ -143,6 +143,8 @@ Follow these steps to set up FHIR MCP Server in your environment.
                "-i",
                "--rm",
                "--init",
+               "--name",
+               "fhir-mcp-server",
                "--mount", // optional - volume for reload
                "type=bind,source=<your-project-path>/app,target=/root_project/app", // optional - volume for reload
                "--mount",
@@ -209,23 +211,42 @@ Follow these steps to set up FHIR MCP Server in your environment.
 
 The FHIR MCP Server includes built-in encryption infrastructure to protect sensitive configuration values. Sensitive fields like API keys and passwords are automatically encrypted and decrypted at runtime.
 
+You are allowed to store passwords as a plain text, but if you want to have them encrypted, follow the instruction below.
+
 #### Setting Up Encryption
+
+<details>
+<summary>Manually</summary>
 
 1. **Generate a Master Key**:
    ```bash
-   uv run ./scripts/cryptography/generate_master_key.py
+   # uv method
+   uv run scripts/cryptography/generate_master_key.py
+
+   # docker method
+   docker exec fhir-mcp-server uv run scripts/cryptography/generate_master_key.py
    ```
    Put that key as a MASTER_KEY enviornment variable in .env.
 
 2. **Encrypt Sensitive Values**:
    ```bash
-   python scripts/cryptography/encrypt_setting.py "your_secret_value"
+   # uv method
+   uv run scripts/cryptography/encrypt_setting.py "your_secret_value"
+
+    # docker method
+   docker exec fhir-mcp-server uv run scripts/cryptography/encrypt_setting.py "your_secret_value"
    ```
 
 3. **Decrypt Values** (for verification):
    ```bash
-   python scripts/cryptography/decrypt_setting.py "encrypted_value"
+   # uv method
+   uv run scripts/cryptography/decrypt_setting.py "encrypted_value"
+
+    # docker method
+   docker exec fhir-mcp-server uv run scripts/cryptography/decrypt_setting.py "encrypted_value"
    ```
+
+</details>
 
 #### Encrypted Configuration Fields
 
