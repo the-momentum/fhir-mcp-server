@@ -143,6 +143,8 @@ Follow these steps to set up FHIR MCP Server in your environment.
                "-i",
                "--rm",
                "--init",
+               "--name",
+               "fhir-mcp-server",
                "--mount", // optional - volume for reload
                "type=bind,source=<your-project-path>/app,target=/root_project/app", // optional - volume for reload
                "--mount",
@@ -205,19 +207,91 @@ Follow these steps to set up FHIR MCP Server in your environment.
 
 ## 🔧 Configuration
 
-### Environment Variables
+### 🔐 Security & Encryption
 
-| Variable | Description | Example Value |
-|----------|-------------|---------------|
-| FHIR_SERVER_HOST | FHIR API host URL | `https://api.medplum.com` |
-| FHIR_BASE_URL | FHIR base path | `/fhir/R4` |
-| FHIR_SERVER_CLIENT_ID | OAuth2 client ID for FHIR | `019720e7...` |
-| FHIR_SERVER_CLIENT_SECRET | OAuth2 client secret for FHIR | `9e2ee73...` |
-| LOINC_ENDPOINT | LOINC API search endpoint | `https://loinc.regenstrief.org/searchapi/loincs` |
-| LOINC_USERNAME | LOINC account username | `loinc-user` |
-| LOINC_PASSWORD | LOINC account password | `my-loinc-password` |
-| PINECONE_API_KEY | Pinecone API key | `pcsk_...` |
-| EMBEDDING_MODEL | Hugging Face embedding model name | `NeuML/pubmedbert-base-embeddings` |
+The FHIR MCP Server includes built-in encryption infrastructure to protect sensitive configuration values. Sensitive fields like API keys and passwords are automatically encrypted and decrypted at runtime.
+
+You are allowed to store passwords as a plain text, but if you want to have them encrypted, follow the instruction below.
+
+#### Setting Up Encryption
+
+<details>
+<summary>Automated Setup (Recommended)</summary>
+
+For most users, use the automated setup script:
+
+```bash
+# uv method
+uv run scripts/cryptography/setup_encryption.py
+
+# docker method
+docker exec fhir-mcp-server uv run scripts/cryptography/setup_encryption.py
+```
+
+This script will:
+1. Check for `MASTER_KEY` in `config/.env` and generate one if needed
+2. Automatically encrypt all sensitive values (`LOINC_PASSWORD`, `FHIR_SERVER_CLIENT_SECRET`, `PINECONE_API_KEY`)
+3. Update your `.env` file with encrypted values
+4. Skip empty variables and already encrypted values
+
+</details>
+
+<details>
+<summary>Manual Setup</summary>
+
+1. **Generate a Master Key**:
+   ```bash
+   # uv method
+   uv run scripts/cryptography/generate_master_key.py
+
+   # docker method
+   docker exec fhir-mcp-server uv run scripts/cryptography/generate_master_key.py
+   ```
+   Put that key as a MASTER_KEY environment variable in .env.
+
+2. **Encrypt Sensitive Values**:
+   ```bash
+   # uv method
+   uv run scripts/cryptography/encrypt_setting.py "your_secret_value"
+
+    # docker method
+   docker exec fhir-mcp-server uv run scripts/cryptography/encrypt_setting.py "your_secret_value"
+   ```
+
+3. **Decrypt Values** (for verification):
+   ```bash
+   # uv method
+   uv run scripts/cryptography/decrypt_setting.py "encrypted_value"
+
+    # docker method
+   docker exec fhir-mcp-server uv run scripts/cryptography/decrypt_setting.py "encrypted_value"
+   ```
+
+</details>
+
+
+#### Encrypted Configuration Fields
+
+The following fields are automatically encrypted when using `EncryptedField`:
+
+- `FHIR_SERVER_CLIENT_SECRET` - OAuth2 client secret for FHIR server
+- `LOINC_PASSWORD` - LOINC account password
+- `PINECONE_API_KEY` - Pinecone API key for vector search
+
+#### Environment Variables
+
+| Variable | Description | Example Value | Encryption |
+|----------|-------------|---------------|------------|
+| MASTER_KEY | Master encryption key | `gAAAAABl...` | Required |
+| FHIR_SERVER_HOST | FHIR API host URL | `https://api.medplum.com` | No |
+| FHIR_BASE_URL | FHIR base path | `/fhir/R4` | No |
+| FHIR_SERVER_CLIENT_ID | OAuth2 client ID for FHIR | `019720e7...` | No |
+| FHIR_SERVER_CLIENT_SECRET | OAuth2 client secret for FHIR | `gAAAAABl...` | **Yes** |
+| LOINC_ENDPOINT | LOINC API search endpoint | `https://loinc.regenstrief.org/searchapi/loincs` | No |
+| LOINC_USERNAME | LOINC account username | `loinc-user` | No |
+| LOINC_PASSWORD | LOINC account password | `gAAAAABl...` | **Yes** |
+| PINECONE_API_KEY | Pinecone API key | `gAAAAABl...` | **Yes** |
+| EMBEDDING_MODEL | Hugging Face embedding model name | `NeuML/pubmedbert-base-embeddings` | No |
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 

@@ -15,7 +15,7 @@ from app.services.rag.semantic_embedder import SemanticEmbedder
 
 class PineconeClient:
     def __init__(self):
-        self.pc = Pinecone(api_key=settings.PINECONE_API_KEY.get_secret_value())
+        self.pc = Pinecone(api_key=settings.PINECONE_API_KEY)
         self.embedder = SemanticEmbedder(model_name=settings.EMBEDDING_MODEL)
         self.index = create_index_if_not_exists(
             pc=self.pc,

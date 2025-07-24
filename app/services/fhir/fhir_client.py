@@ -25,7 +25,7 @@ class FhirClient:
         self.base_url = settings.FHIR_SERVER_HOST + settings.FHIR_BASE_URL
         self.token_manager = AccessTokenManager(
             settings.FHIR_SERVER_CLIENT_ID,
-            settings.FHIR_SERVER_CLIENT_SECRET.get_secret_value(),
+            settings.FHIR_SERVER_CLIENT_SECRET,
             settings.FHIR_SERVER_HOST,
         )
 
