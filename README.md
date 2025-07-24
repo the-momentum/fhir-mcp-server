@@ -216,7 +216,28 @@ You are allowed to store passwords as a plain text, but if you want to have them
 #### Setting Up Encryption
 
 <details>
-<summary>Manually</summary>
+<summary>Automated Setup (Recommended)</summary>
+
+For most users, use the automated setup script:
+
+```bash
+# uv method
+uv run scripts/cryptography/setup_encryption.py
+
+# docker method
+docker exec fhir-mcp-server uv run scripts/cryptography/setup_encryption.py
+```
+
+This script will:
+1. Check for `MASTER_KEY` in `config/.env` and generate one if needed
+2. Automatically encrypt all sensitive values (`LOINC_PASSWORD`, `FHIR_SERVER_CLIENT_SECRET`, `PINECONE_API_KEY`)
+3. Update your `.env` file with encrypted values
+4. Skip empty variables and already encrypted values
+
+</details>
+
+<details>
+<summary>Manual Setup</summary>
 
 1. **Generate a Master Key**:
    ```bash
@@ -226,7 +247,7 @@ You are allowed to store passwords as a plain text, but if you want to have them
    # docker method
    docker exec fhir-mcp-server uv run scripts/cryptography/generate_master_key.py
    ```
-   Put that key as a MASTER_KEY enviornment variable in .env.
+   Put that key as a MASTER_KEY environment variable in .env.
 
 2. **Encrypt Sensitive Values**:
    ```bash
@@ -247,6 +268,7 @@ You are allowed to store passwords as a plain text, but if you want to have them
    ```
 
 </details>
+
 
 #### Encrypted Configuration Fields
 
