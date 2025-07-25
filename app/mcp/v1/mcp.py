@@ -1,16 +1,16 @@
 from fastmcp import FastMCP
 
 from app.mcp.v1.tools import (
-    patient,
-    observation,
-    generic,
-    encounter,
-    condition,
     allergy_intolerance,
-    immunization,
-    family_member_history,
-    medication,
+    condition,
     document_reference,
+    encounter,
+    family_member_history,
+    generic,
+    immunization,
+    medication,
+    observation,
+    patient,
 )
 
 mcp_router = FastMCP(name="Main MCP")

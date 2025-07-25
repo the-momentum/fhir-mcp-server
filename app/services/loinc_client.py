@@ -1,5 +1,6 @@
 import requests
 from requests.auth import HTTPBasicAuth
+from requests.exceptions import RequestException
 
 from app.config import settings
 
@@ -25,7 +26,10 @@ class LoincClient:
         }
         try:
             response = requests.get(
-                url, auth=self.auth, params=params, timeout=settings.LOINC_TIMEOUT
+                url,
+                auth=self.auth,
+                params=params,
+                timeout=settings.LOINC_TIMEOUT,
             )
             data = response.json()
             # Check for authentication errors
@@ -34,9 +38,8 @@ class LoincClient:
                 if "Authentication Failed" in error_msg or "authorization" in error_msg.lower():
                     error_desc = data.get("ErrorDescription", "")
                     return [{"Error": f"Authentication failed: {error_msg}. {error_desc}"}]
-                else:
-                    return [{"Error": error_msg}]
-        except requests.exceptions.RequestException as e:
+                return [{"Error": error_msg}]
+        except RequestException as e:
             return [{"Error": f"Request failed: {str(e)}"}]
         except ValueError as e:
             return [{"Error": f"Invalid JSON response: {str(e)}"}]
@@ -56,7 +59,7 @@ class LoincClient:
                 {
                     "AllRecordsFound": records_found,
                     "Error": "No active LOINC codes found in current fetch",
-                }
+                },
             ]
 
         return active_codes[:max_codes]
@@ -68,7 +71,10 @@ class LoincClient:
         max_fetch: int = settings.LOINC_MAX_FETCH,
     ) -> list[dict]:
         return self._get_loinc_code(
-            component_name, max_codes, max_fetch, sort_order="common_test_rank asc"
+            component_name,
+            max_codes,
+            max_fetch,
+            sort_order="common_test_rank asc",
         )
 
 

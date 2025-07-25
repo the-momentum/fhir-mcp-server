@@ -1,8 +1,7 @@
 from fastmcp import FastMCP
 
+from app.schemas.fhir_schemas import FhirError, FhirQueryRequest, FhirQueryResponse
 from app.services.fhir.fhir_client import fhir_client
-from app.schemas.fhir_schemas import FhirQueryResponse, FhirQueryRequest, FhirError
-
 
 condition_router = FastMCP(name="Condition Request MCP")
 
@@ -17,7 +16,8 @@ async def request_condition_resource(
     Rules:
         - When creating or updating a condition, use only the data explicitly provided by the user.
         - Do not guess, auto-fill, or assume any missing data.
-        - When deleting a condition, ask the user for confirmation with details of the condition and wait for the user's confirmation.
+        - When deleting a condition, ask the user for confirmation with details of the
+          condition and wait for the user's confirmation.
         - Provide links to the app (not api) condition resource in the final response.
 
     Args:

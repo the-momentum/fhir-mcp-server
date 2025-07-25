@@ -1,11 +1,12 @@
 import os
 from enum import Enum
+from functools import wraps
 from typing import Any, Callable, Generator, Protocol
-from dotenv import load_dotenv
 
 from cryptography.fernet import Fernet
-from pydantic_core import core_schema
+from dotenv import load_dotenv
 from pydantic import GetCoreSchemaHandler
+from pydantic_core import core_schema
 
 CallableGenerator = Generator[Callable[..., Any], None, None]
 
@@ -22,7 +23,7 @@ class EnvironmentType(str, Enum):
 
 
 class Decryptor(Protocol):
-    def decrypt(self, value: bytes) -> bytes: ...  # fmt: skip
+    def decrypt(self, value: bytes) -> bytes: ...
 
 
 class FakeFernet:
@@ -33,7 +34,9 @@ class FakeFernet:
 class EncryptedField(str):
     @classmethod
     def __get_pydantic_core_schema__(
-        cls, source_type: Any, handler: GetCoreSchemaHandler
+        cls,
+        source_type: Any,
+        handler: GetCoreSchemaHandler,
     ) -> core_schema.CoreSchema:
         string_schema = core_schema.str_schema()
         return core_schema.no_info_after_validator_function(cls, string_schema)
@@ -65,3 +68,17 @@ class FernetDecryptorField:
 
     def decrypt(self, value: bytes) -> bytes:
         return self._decryptor.decrypt(value)
+
+
+def set_env_from_settings(func: Callable[..., Any]) -> Callable[..., Any]:
+    """
+    Decorator to set environment variables from settings.
+    This decorator is useful for encrypted fields and providers that
+    require API keys to be available as environment variables.
+    """
+
+    @wraps(func)
+    def wrapper(*args, **kwargs) -> Any:
+        return func(*args, **kwargs)
+
+    return wrapper

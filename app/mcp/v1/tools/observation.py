@@ -1,10 +1,9 @@
 from fastmcp import FastMCP
 
 from app.config import settings
+from app.schemas.fhir_schemas import FhirError, FhirQueryRequest, FhirQueryResponse
 from app.services.fhir.fhir_client import fhir_client
-from app.schemas.fhir_schemas import FhirQueryResponse, FhirQueryRequest, FhirError
 from app.services.loinc_client import loinc_client
-
 
 observation_router = FastMCP(name="Observation Request MCP")
 
@@ -36,7 +35,8 @@ async def get_loinc_codes(
         - Do not retry with different parameters.
         - Report the authentication error to the user.
         - Suggest they check their LOINC API credentials.
-        - Ask the user if they want to use your knowledge to find a LOINC code and wait for the confirmation.
+        - Ask the user if they want to use your knowledge to find a LOINC code and wait for
+          the confirmation.
           Add warning that this may cause wrong results.
     3. If "No active LOINC codes found in current fetch":
         - Increase max_fetch progressively (50→100→200→RecordsFound).
@@ -63,7 +63,9 @@ async def get_loinc_codes(
     """
 
     return loinc_client.get_common_loinc_codes(
-        component_name, max_codes=max_codes, max_fetch=max_fetch
+        component_name,
+        max_codes=max_codes,
+        max_fetch=max_fetch,
     )
 
 
@@ -80,9 +82,11 @@ async def request_observation_resource(
     2. Then use this tool to fetch the observation with the LOINC code
 
     Rules:
-        - When creating or updating an observation, use only the data explicitly provided by the user.
+        - When creating or updating an observation, use only the data explicitly provided
+          by the user.
         - Do not guess, auto-fill, or assume any missing data.
-        - When deleting an observation, ask the user for confirmation with details of the observation and wait for the user's confirmation.
+        - When deleting an observation, ask the user for confirmation with details of the
+          observation and wait for the user's confirmation.
         - Provide links to the app (not api) observation resource in the final response.
 
     Args:

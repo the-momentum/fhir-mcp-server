@@ -1,7 +1,8 @@
 import requests
+from requests.exceptions import RequestException
 
 from app.config import settings
-from app.schemas.fhir_schemas import FhirQueryResponse, FhirMethod
+from app.schemas.fhir_schemas import FhirMethod, FhirQueryResponse
 from app.services.fhir.errors import handle_requests_exceptions
 from app.services.fhir.token_manager import AccessTokenManager
 from app.utils.auth import BearerAuth
@@ -49,7 +50,11 @@ class FhirClient:
 
         try:
             response = requests.request(
-                method, url, auth=auth, timeout=settings.FHIR_SERVER_TIMEOUT, **kwargs
+                method,
+                url,
+                auth=auth,
+                timeout=settings.FHIR_SERVER_TIMEOUT,
+                **kwargs,
             )
             response.raise_for_status()
             return FhirQueryResponse(
@@ -58,7 +63,7 @@ class FhirClient:
                 body=kwargs.get("json", {}),
                 response=response.json(),
             )
-        except (requests.exceptions.RequestException, ValueError) as e:
+        except (RequestException, ValueError) as e:
             handle_requests_exceptions(e, url)
             raise e
 

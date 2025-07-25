@@ -1,4 +1,5 @@
 from llama_index.embeddings.huggingface import HuggingFaceEmbedding
+
 from app.schemas.vector_store_schemas import Embeddings
 
 

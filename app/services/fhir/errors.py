@@ -1,5 +1,5 @@
-import requests
 from fastapi import status
+from requests.exceptions import HTTPError, RequestException
 
 from app.mcp.exceptions import APICustomError
 
@@ -16,7 +16,7 @@ def handle_requests_exceptions(e: Exception, url: str) -> None:
         APICustomError: A standardized API error with appropriate status and message
     """
 
-    if isinstance(e, requests.exceptions.HTTPError):
+    if isinstance(e, HTTPError):
         response = e.response
         raise APICustomError(
             status=response.status_code if response else status.HTTP_500_INTERNAL_SERVER_ERROR,
@@ -24,21 +24,20 @@ def handle_requests_exceptions(e: Exception, url: str) -> None:
             message=f"FHIR API returned HTTP error: {response.text if response else str(e)}",
             ctx={"url": url},
         )
-    elif isinstance(e, requests.exceptions.RequestException):
+    if isinstance(e, RequestException):
         raise APICustomError(
             status=status.HTTP_502_BAD_GATEWAY,
             code="fhir_connection_error",
             message="Failed to connect to FHIR API.",
         )
-    elif isinstance(e, ValueError):
+    if isinstance(e, ValueError):
         raise APICustomError(
             status=status.HTTP_500_INTERNAL_SERVER_ERROR,
             code="fhir_invalid_response",
             message="FHIR API returned invalid JSON.",
         )
-    else:
-        raise APICustomError(
-            status=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            code="unknown_error",
-            message="Unexpected error occurred.",
-        )
+    raise APICustomError(
+        status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+        code="unknown_error",
+        message="Unexpected error occurred.",
+    )

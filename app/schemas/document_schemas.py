@@ -1,4 +1,5 @@
 from typing import Literal
+
 from pydantic import BaseModel
 
 type DocumentFormat = Literal["pdf", "txt", "csv", "json"]

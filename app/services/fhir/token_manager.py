@@ -31,14 +31,18 @@ class AccessTokenManager:
     """
 
     def __init__(
-        self, client_id: str, client_secret: str, base_url: str, token: Token | None = None
+        self,
+        client_id: str,
+        client_secret: str,
+        base_url: str,
+        token: Token | None = None,
     ):
         self.client_id = client_id
         self.client_secret = client_secret
         self.base_url = base_url
         self.token = token if token else Token()
 
-    def _fetch_token(self):
+    def _fetch_token(self) -> None:
         auth_url = f"{self.base_url}/oauth2/token"
         client_credentials = {
             "grant_type": "client_credentials",
@@ -46,11 +50,14 @@ class AccessTokenManager:
             "client_secret": self.client_secret,
         }
         response = requests.post(
-            auth_url, data=client_credentials, timeout=settings.FHIR_SERVER_TIMEOUT
+            auth_url,
+            data=client_credentials,
+            timeout=settings.FHIR_SERVER_TIMEOUT,
         )
         if response.status_code != status.HTTP_200_OK:
             raise HTTPException(
-                status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid client credentials"
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Invalid client credentials",
             )
         token_data = response.json()
         self.token.access_token = token_data["access_token"]

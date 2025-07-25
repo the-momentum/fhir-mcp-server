@@ -29,7 +29,7 @@ class APIErrorDetail(BaseModel):
     ctx: dict[str, Any] | None = None
 
     @field_serializer("path")
-    def rewrite_body_path(self, path: list[str | int], _info) -> list[str | int]:
+    def rewrite_body_path(self, path: list[str | int], _info: Any) -> list[str | int]:
         if path == ["body"]:
             return ["_base"]
 

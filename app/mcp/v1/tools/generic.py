@@ -1,12 +1,12 @@
 """
-This module contains the tool for making generic requests to the FHIR server, when the other tools are not applicable.
+This module contains the tool for making generic requests to the FHIR server, when the
+other tools are not applicable.
 """
 
 from fastmcp import FastMCP
 
+from app.schemas.fhir_schemas import FhirError, FhirQueryRequest, FhirQueryResponse
 from app.services.fhir.fhir_client import fhir_client
-from app.schemas.fhir_schemas import FhirQueryResponse, FhirQueryRequest, FhirError
-
 
 generic_router = FastMCP(name="Generic Request MCP")
 
@@ -17,12 +17,15 @@ async def request_generic_resource(
 ) -> FhirQueryResponse | FhirError:
     """
     Makes an HTTP request to the FHIR server.
-    Use this tool to perform CRUD operations on any FHIR resource ONLY if the other tools are not applicable.
+    Use this tool to perform CRUD operations on any FHIR resource ONLY if the other
+    tools are not applicable.
 
     Rules:
-        - When creating or updating a resource, use only the data explicitly provided by the user.
+        - When creating or updating a resource, use only the data explicitly provided by
+          the user.
         - Do not guess, auto-fill, or assume any missing data.
-        - When deleting a resource, ask the user for confirmation with details of the resource and wait for the user's confirmation.
+        - When deleting a resource, ask the user for confirmation with details of the
+          resource and wait for the user's confirmation.
         - Provide links to the app (not api) resource in the final response.
 
     Args:

@@ -1,7 +1,7 @@
 from cryptography.fernet import Fernet
 
 
-def main():
+def main() -> None:
     print(Fernet.generate_key())
 
 

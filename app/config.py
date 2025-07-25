@@ -1,9 +1,15 @@
 from functools import lru_cache
 from pathlib import Path
+
 from pydantic import ValidationInfo, field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
-from app.utils.config_utils import EncryptedField, EnvironmentType, FernetDecryptorField
+from app.utils.config_utils import (
+    EncryptedField,
+    EnvironmentType,
+    FernetDecryptorField,
+    set_env_from_settings,
+)
 
 
 class Settings(BaseSettings):
@@ -47,9 +53,17 @@ class Settings(BaseSettings):
     TOP_K_RETRIEVAL_RESULTS: int = 10
 
     @field_validator(
-        "LOINC_PASSWORD", "FHIR_SERVER_CLIENT_SECRET", "PINECONE_API_KEY", mode="after"
+        "LOINC_PASSWORD",
+        "FHIR_SERVER_CLIENT_SECRET",
+        "PINECONE_API_KEY",
+        mode="after",
     )
-    def _decrypt_encrypted_fields(cls, v, validation_info: ValidationInfo):
+    @classmethod
+    def _decrypt_encrypted_fields(
+        cls,
+        v: EncryptedField,
+        validation_info: ValidationInfo,
+    ) -> str | EncryptedField:
         fernet_decryptor = validation_info.data.get("FERNET_DECRYPTOR")
         if fernet_decryptor:
             decrypted_value = v.get_decrypted_value(fernet_decryptor)
@@ -64,6 +78,7 @@ class Settings(BaseSettings):
 
 
 @lru_cache
+@set_env_from_settings
 def get_settings() -> Settings:
     return Settings()  # type: ignore[call-arg]
 

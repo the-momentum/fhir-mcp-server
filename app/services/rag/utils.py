@@ -1,9 +1,10 @@
 import hashlib
+
 from app.schemas.vector_store_schemas import PineconeSearchResponse
 
 
 def convert_pinecone_response_to_json(
-    pinecone_response,
+    pinecone_response: dict,
 ) -> list[PineconeSearchResponse]:
     matches = pinecone_response.get("matches", [])
     converted = []
@@ -15,7 +16,7 @@ def convert_pinecone_response_to_json(
                 fhir_document_id=match.get("metadata", {}).get("fhir_document_id"),
                 source_url=match.get("metadata", {}).get("source_url"),
                 score=match.get("score"),
-            )
+            ),
         )
     return converted
 
