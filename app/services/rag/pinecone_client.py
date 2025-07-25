@@ -1,16 +1,17 @@
 import sys
+
 from pinecone import Pinecone
 
 from app.config import settings
-from app.services.rag.utils import convert_pinecone_response_to_json
-from app.services.rag.pinecone_initializer import create_index_if_not_exists
 from app.schemas.vector_store_schemas import (
-    PineconeSearchResponse,
-    PineconeSearchRequest,
-    PineconeUpsertRequest,
     PineconeError,
+    PineconeSearchRequest,
+    PineconeSearchResponse,
+    PineconeUpsertRequest,
 )
+from app.services.rag.pinecone_initializer import create_index_if_not_exists
 from app.services.rag.semantic_embedder import SemanticEmbedder
+from app.services.rag.utils import convert_pinecone_response_to_json
 
 
 class PineconeClient:
@@ -61,7 +62,9 @@ class PineconeClient:
             return PineconeError(error_message=str(e))
 
     def check_if_document_exists(
-        self, fhir_document_id: str, namespace: str = settings.PINECONE_NAMESPACE
+        self,
+        fhir_document_id: str,
+        namespace: str = settings.PINECONE_NAMESPACE,
     ) -> bool | PineconeError:
         """
         Checks if a document exists in the Pinecone index.

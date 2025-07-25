@@ -1,6 +1,6 @@
 from app.config import settings
+from app.schemas.vector_store_schemas import Embeddings, PineconeUpsertRequest, Vector
 from app.services.rag.pinecone_client import pinecone_client
-from app.schemas.vector_store_schemas import PineconeUpsertRequest, Embeddings, Vector
 
 
 def get_chunks_embeddings(chunks: list[str]) -> Embeddings:
@@ -32,16 +32,16 @@ def upload_embeddings(
                     "chunk_index": i,
                     "fhir_document_id": fhir_document_id,
                 },
-            )
+            ),
         )
 
         if len(vectors) >= batch_size:
             pinecone_client.upsert_vectors(
-                upsert_request=PineconeUpsertRequest(vector=vectors, namespace=namespace)
+                upsert_request=PineconeUpsertRequest(vector=vectors, namespace=namespace),
             )
             vectors = []
 
     if vectors:
         pinecone_client.upsert_vectors(
-            upsert_request=PineconeUpsertRequest(vector=vectors, namespace=namespace)
+            upsert_request=PineconeUpsertRequest(vector=vectors, namespace=namespace),
         )

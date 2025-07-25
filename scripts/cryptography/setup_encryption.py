@@ -49,7 +49,7 @@ def load_env_file(env_path: Path) -> dict[str, str]:
     return env_vars
 
 
-def save_env_file(env_path: Path, env_vars: dict[str, str]):
+def save_env_file(env_path: Path, env_vars: dict[str, str]) -> None:
     env_path.parent.mkdir(parents=True, exist_ok=True)
 
     existing_lines = []
@@ -94,7 +94,7 @@ def encrypt_value(value: str, master_key: str) -> str:
     return encrypted.decode("utf-8")
 
 
-def main():
+def main() -> int:
     env_path = project_root / "config" / ".env"
 
     env_vars = load_env_file(env_path)

@@ -1,8 +1,7 @@
 from fastmcp import FastMCP
 
+from app.schemas.fhir_schemas import FhirError, FhirQueryRequest, FhirQueryResponse
 from app.services.fhir.fhir_client import fhir_client
-from app.schemas.fhir_schemas import FhirQueryResponse, FhirQueryRequest, FhirError
-
 
 immunization_router = FastMCP(name="Immunization Request MCP")
 
@@ -15,9 +14,11 @@ async def request_immunization_resource(
     Makes an HTTP request to the FHIR server.
     Use this tool to perform CRUD operations only on the FHIR Immunization resource.
     Rules:
-        - When creating or updating an immunization, use only the data explicitly provided by the user.
+        - When creating or updating an immunization, use only the data explicitly provided
+          by the user.
         - Do not guess, auto-fill, or assume any missing data.
-        - When deleting an immunization, ask the user for confirmation with details of the immunization and wait for the user's confirmation.
+        - When deleting an immunization, ask the user for confirmation with details of the
+          immunization and wait for the user's confirmation.
         - Provide links to the app (not api) immunization resource in the final response.
 
     Args:

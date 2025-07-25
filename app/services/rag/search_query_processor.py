@@ -1,15 +1,18 @@
 from app.config import settings
-from app.services.rag.pinecone_client import pinecone_client
 from app.schemas.vector_store_schemas import (
-    PineconeSearchResponse,
-    PineconeSearchRequest,
     PineconeError,
+    PineconeSearchRequest,
+    PineconeSearchResponse,
 )
+from app.services.rag.pinecone_client import pinecone_client
 
 
 class SearchQueryProcessor:
     def process_query(
-        self, query: str, fhir_document_id: str, top_k: int = settings.TOP_K_RETRIEVAL_RESULTS
+        self,
+        query: str,
+        fhir_document_id: str,
+        top_k: int = settings.TOP_K_RETRIEVAL_RESULTS,
     ) -> list[PineconeSearchResponse] | PineconeError:
         if not pinecone_client:
             raise ValueError("Pinecone client is not initialized")

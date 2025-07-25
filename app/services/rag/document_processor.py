@@ -1,14 +1,14 @@
 from app.config import settings
+from app.schemas.document_schemas import Document
 from app.services.rag.document_service import (
-    download_bytes,
     bytes_to_text,
     chunk_text,
+    download_bytes,
 )
 from app.services.rag.vector_store_service import (
     get_chunks_embeddings,
     upload_embeddings,
 )
-from app.schemas.document_schemas import Document
 
 
 class DocumentProcessor:

@@ -1,14 +1,15 @@
-import requests
-import chardet
-import io
 import csv
+import io
 import json
-import fitz
-
 from functools import lru_cache
+
+import chardet
+import fitz
+import requests
 from llama_index.core.node_parser import SemanticSplitterNodeParser
-from app.services.rag.pinecone_client import pinecone_client
 from llama_index.core.schema import Document
+
+from app.services.rag.pinecone_client import pinecone_client
 
 
 @lru_cache(maxsize=1)
@@ -38,17 +39,17 @@ def bytes_to_text(file_bytes: bytes, filetype: str | None = None) -> str:
         doc = fitz.open(stream=file_bytes, filetype="pdf")
         return "\n".join([page.get_text() for page in doc])
 
-    elif filetype == "txt":
+    if filetype == "txt":
         encoding = detect_encoding(file_bytes)
         return file_bytes.decode(encoding)
 
-    elif filetype == "csv":
+    if filetype == "csv":
         encoding = detect_encoding(file_bytes)
         f = io.StringIO(file_bytes.decode(encoding))
         reader = csv.reader(f)
         return "\n".join([", ".join(row) for row in reader])
 
-    elif filetype == "json":
+    if filetype == "json":
         encoding = detect_encoding(file_bytes)
         data = json.loads(file_bytes.decode(encoding))
         return json.dumps(data, indent=2, ensure_ascii=False)
