@@ -4,19 +4,19 @@ version = "0.1.0"
 description = "MCP server template"
 requires-python = ">=3.13"
 dependencies = [
-    "chardet>=5.2.0",
-    "cryptography>=45.0.4",
-    "fastapi>=0.115.14",
-    "fastmcp>=2.9.2",
-    "greenlet>=3.2.3",
-    "httpx>=0.28.1",
-    "llama-index>=0.12.47",
-    "llama-index-embeddings-huggingface>=0.5.5",
-    "passlib>=1.7.4",
-    "pinecone>=7.3.0",
-    "pydantic>=2.11.7",
-    "pydantic-settings>=2.10.1",
-    "pymupdf>=1.26.3",
+    "chardet>=5.2",
+    "cryptography>=45.0",
+    "fastapi>=0.116",
+    "fastmcp>=2.9",
+    "greenlet>=3.2",
+    "httpx>=0.28",
+    "llama-index>=0.12",
+    "llama-index-embeddings-huggingface>=0.5",
+    "passlib>=1.7",
+    "pinecone>=7.3",
+    "pydantic>=2.11",
+    "pydantic-settings>=2.10",
+    "pymupdf>=1.26",
     "sentence-transformers>=5.0.0",
 ]
 
