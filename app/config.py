@@ -13,6 +13,7 @@ from app.utils.config_utils import (
 )
 
 type OAuth2AuthMethod = Literal["client_credentials", "authorization_code"]
+type TransportMode = Literal["stdio", "http", "https"]
 
 
 class Settings(BaseSettings):
@@ -28,17 +29,24 @@ class Settings(BaseSettings):
 
     LOGGING_CONF_FILE: str = "logging.conf"
 
+    # MCP SERVER
+    TRANSPORT_MODE: TransportMode = "stdio"
+    MCP_SERVER_HOST: str = "localhost"
+    MCP_SERVER_PORT: int = 8000
+    MCP_SERVER_SSL_KEYFILE: str = "./localhost.pem"
+    MCP_SERVER_SSL_CERTFILE: str = "./localhost-key.pem"
+
+    # OAuth2 Configuration
+    OAUTH2_AUTH_METHOD: OAuth2AuthMethod = "client_credentials"
+    OAUTH2_REDIRECT_URI: str = ""
+    OAUTH2_SCOPE: str = "openid"
+
     # FHIR SERVER
     FHIR_SERVER_HOST: str = "https://api.medplum.com"
     FHIR_BASE_URL: str = "/fhir/R4"
     FHIR_SERVER_CLIENT_ID: str = ""
     FHIR_SERVER_CLIENT_SECRET: EncryptedField = EncryptedField("")
     FHIR_SERVER_TIMEOUT: int = 20
-
-    # OAuth2 Configuration
-    OAUTH2_AUTH_METHOD: OAuth2AuthMethod = "client_credentials"
-    OAUTH2_REDIRECT_URI: str = ""
-    OAUTH2_SCOPE: str = "openid"
 
     # LOINC
     LOINC_ENDPOINT: str = "https://loinc.regenstrief.org/searchapi/loincs"

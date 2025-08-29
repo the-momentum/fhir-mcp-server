@@ -9,6 +9,8 @@ services:
         EMBEDDING_MODEL: ${EMBEDDING_MODEL}
     env_file:
       - config/.env
+    environment:
+      - TRANSPORT_MODE=${TRANSPORT_MODE:-stdio}
     volumes:
       - ./app:/root_project/app
       - type: bind
@@ -16,6 +18,12 @@ services:
         target: /root_project/config/.env
         bind:
           create_host_path: false
+      - type: bind
+        source: ./ssl
+        target: /ssl
+        bind:
+          create_host_path: false
+        read_only: true
     ports:
       - 8000:8000
     stdin_open: true

@@ -1,7 +1,7 @@
 [project]
-name = "mcp-template"
+name = "fhir-mcp-server"
 version = "0.1.0"
-description = "MCP server template"
+description = "FHIR MCP Server"
 requires-python = ">=3.13"
 dependencies = [
     "chardet>=5.2",
