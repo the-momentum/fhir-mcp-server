@@ -33,8 +33,8 @@ class Settings(BaseSettings):
     TRANSPORT_MODE: TransportMode = "stdio"
     MCP_SERVER_HOST: str = "localhost"
     MCP_SERVER_PORT: int = 8000
-    MCP_SERVER_SSL_KEYFILE: str = "./localhost.pem"
-    MCP_SERVER_SSL_CERTFILE: str = "./localhost-key.pem"
+    MCP_SERVER_SSL_KEYFILE: str = "./localhost-key.pem"
+    MCP_SERVER_SSL_CERTFILE: str = "./localhost.pem"
 
     # OAuth2 Configuration
     OAUTH2_AUTH_METHOD: OAuth2AuthMethod = "client_credentials"
