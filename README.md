@@ -149,6 +149,7 @@ Follow these steps to set up FHIR MCP Server in your environment.
                "type=bind,source=<your-project-path>/app,target=/root_project/app", // optional - volume for reload
                "--mount",
                "type=bind,source=<your-project-path>/config/.env,target=/root_project/config/.env",
+               "-e", "TRANSPORT_MODE=stdio", // Set transport mode: stdio, http, or https
                "mcp-server:latest"
             ]
          }

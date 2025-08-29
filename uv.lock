@@ -1,5 +1,5 @@
 version = 1
-revision = 2
+revision = 3
 requires-python = ">=3.13"
 
 [[package]]
@@ -327,7 +327,7 @@ version = "3.22.3"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "attrs" },
-    { name = "docstring-parser", marker = "python_full_version < '4.0'" },
+    { name = "docstring-parser", marker = "python_full_version < '4'" },
     { name = "rich" },
     { name = "rich-rst" },
 ]
@@ -479,6 +479,69 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/00/a0/eceb88277ef9e3a442e099377a9b9c29fb2fa724e234486e03a44ca1c677/fastmcp-2.10.6.tar.gz", hash = "sha256:5a7b3301f9f1b64610430caef743ac70175c4b812e1949f037e4db65b0a42c5a", size = 1640538, upload-time = "2025-07-19T20:02:12.543Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/dc/05/4958cccbe862958d862b6a15f2d10d2f5ec3c411268dcb131a433e5e7a0d/fastmcp-2.10.6-py3-none-any.whl", hash = "sha256:9782416a8848cc0f4cfcc578e5c17834da620bef8ecf4d0daabf5dd1272411a2", size = 202613, upload-time = "2025-07-19T20:02:11.47Z" },
+]
+
+[[package]]
+name = "fhir-mcp-server"
+version = "0.1.0"
+source = { editable = "." }
+dependencies = [
+    { name = "chardet" },
+    { name = "cryptography" },
+    { name = "fastapi" },
+    { name = "fastmcp" },
+    { name = "greenlet" },
+    { name = "httpx" },
+    { name = "llama-index" },
+    { name = "llama-index-embeddings-huggingface" },
+    { name = "passlib" },
+    { name = "pinecone" },
+    { name = "pydantic" },
+    { name = "pydantic-settings" },
+    { name = "pymupdf" },
+    { name = "sentence-transformers" },
+]
+
+[package.dev-dependencies]
+code-quality = [
+    { name = "pre-commit" },
+    { name = "ruff" },
+    { name = "ty" },
+]
+dev = [
+    { name = "pytest" },
+    { name = "pytest-asyncio" },
+    { name = "pytest-cov" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "chardet", specifier = ">=5.2" },
+    { name = "cryptography", specifier = ">=45.0" },
+    { name = "fastapi", specifier = ">=0.116" },
+    { name = "fastmcp", specifier = ">=2.9" },
+    { name = "greenlet", specifier = ">=3.2" },
+    { name = "httpx", specifier = ">=0.28" },
+    { name = "llama-index", specifier = ">=0.12" },
+    { name = "llama-index-embeddings-huggingface", specifier = ">=0.5" },
+    { name = "passlib", specifier = ">=1.7" },
+    { name = "pinecone", specifier = ">=7.3" },
+    { name = "pydantic", specifier = ">=2.11" },
+    { name = "pydantic-settings", specifier = ">=2.10" },
+    { name = "pymupdf", specifier = ">=1.26" },
+    { name = "sentence-transformers", specifier = ">=5.0.0" },
+]
+
+[package.metadata.requires-dev]
+code-quality = [
+    { name = "pre-commit", specifier = ">=4.2.0" },
+    { name = "ruff", specifier = ">=0.12.5" },
+    { name = "ty", specifier = ">=0.0.1a15" },
+]
+dev = [
+    { name = "pytest", specifier = ">=8.4.1" },
+    { name = "pytest-asyncio", specifier = ">=1.0.0" },
+    { name = "pytest-cov", specifier = ">=6.2.1" },
 ]
 
 [[package]]
@@ -1141,69 +1204,6 @@ wheels = [
 ]
 
 [[package]]
-name = "mcp-template"
-version = "0.1.0"
-source = { editable = "." }
-dependencies = [
-    { name = "chardet" },
-    { name = "cryptography" },
-    { name = "fastapi" },
-    { name = "fastmcp" },
-    { name = "greenlet" },
-    { name = "httpx" },
-    { name = "llama-index" },
-    { name = "llama-index-embeddings-huggingface" },
-    { name = "passlib" },
-    { name = "pinecone" },
-    { name = "pydantic" },
-    { name = "pydantic-settings" },
-    { name = "pymupdf" },
-    { name = "sentence-transformers" },
-]
-
-[package.dev-dependencies]
-code-quality = [
-    { name = "pre-commit" },
-    { name = "ruff" },
-    { name = "ty" },
-]
-dev = [
-    { name = "pytest" },
-    { name = "pytest-asyncio" },
-    { name = "pytest-cov" },
-]
-
-[package.metadata]
-requires-dist = [
-    { name = "chardet", specifier = ">=5.2" },
-    { name = "cryptography", specifier = ">=45.0" },
-    { name = "fastapi", specifier = ">=0.116" },
-    { name = "fastmcp", specifier = ">=2.9" },
-    { name = "greenlet", specifier = ">=3.2" },
-    { name = "httpx", specifier = ">=0.28" },
-    { name = "llama-index", specifier = ">=0.12" },
-    { name = "llama-index-embeddings-huggingface", specifier = ">=0.5" },
-    { name = "passlib", specifier = ">=1.7" },
-    { name = "pinecone", specifier = ">=7.3" },
-    { name = "pydantic", specifier = ">=2.11" },
-    { name = "pydantic-settings", specifier = ">=2.10" },
-    { name = "pymupdf", specifier = ">=1.26" },
-    { name = "sentence-transformers", specifier = ">=5.0.0" },
-]
-
-[package.metadata.requires-dev]
-code-quality = [
-    { name = "pre-commit", specifier = ">=4.2.0" },
-    { name = "ruff", specifier = ">=0.12.5" },
-    { name = "ty", specifier = ">=0.0.1a15" },
-]
-dev = [
-    { name = "pytest", specifier = ">=8.4.1" },
-    { name = "pytest-asyncio", specifier = ">=1.0.0" },
-    { name = "pytest-cov", specifier = ">=6.2.1" },
-]
-
-[[package]]
 name = "mdurl"
 version = "0.1.2"
 source = { registry = "https://pypi.org/simple" }
@@ -1643,7 +1643,7 @@ dependencies = [
     { name = "pinecone-plugin-interface" },
     { name = "python-dateutil" },
     { name = "typing-extensions" },
-    { name = "urllib3", marker = "python_full_version < '4.0'" },
+    { name = "urllib3", marker = "python_full_version < '4'" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/fa/38/12731d4af470851b4963eba616605868a8599ef4df51c7b6c928e5f3166d/pinecone-7.3.0.tar.gz", hash = "sha256:307edc155621d487c20dc71b76c3ad5d6f799569ba42064190d03917954f9a7b", size = 235256, upload-time = "2025-06-27T20:03:51.498Z" }
 wheels = [

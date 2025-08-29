@@ -30,9 +30,10 @@ COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
 
 COPY --from=builder /root_project /root_project
 
+ENV TRANSPORT_MODE=stdio
 
 EXPOSE 8000
 
 RUN uv run python scripts/start/load_models.py
 
-CMD ["uv", "run", "python", "start.py"]
+CMD ["uv", "run", "python", "start.py", "--transport", "$TRANSPORT_MODE"]
