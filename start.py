@@ -1,4 +1,5 @@
 import argparse
+import os
 import subprocess
 import sys
 from pathlib import Path
@@ -9,12 +10,14 @@ def get_project_dir() -> Path:
 
 
 def main() -> None:
+    default_transport = os.getenv("TRANSPORT_MODE", "stdio")
+
     parser = argparse.ArgumentParser(description="Start the FastMCP application")
     parser.add_argument(
         "--transport",
         choices=["stdio", "http", "https"],
-        default="stdio",
-        help="Transport mode for the MCP server (default: stdio)",
+        default=default_transport,
+        help=f"Transport mode for the MCP server (default: {default_transport})",
     )
 
     args = parser.parse_args()
@@ -41,11 +44,9 @@ def main() -> None:
             "fastmcp",
             "run",
             "app/main.py",
+            "--transport",
+            args.transport,
         ]
-
-        if args.transport == "http":
-            cmd.append("--transport")
-            cmd.append("http")
 
     print(f"Executing: {' '.join(cmd)}", file=sys.stderr)
 

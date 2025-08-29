@@ -36,4 +36,4 @@ EXPOSE 8000
 
 RUN uv run python scripts/start/load_models.py
 
-CMD ["uv", "run", "python", "start.py", "--transport", "$TRANSPORT_MODE"]
+CMD uv run python start.py --transport $TRANSPORT_MODE
