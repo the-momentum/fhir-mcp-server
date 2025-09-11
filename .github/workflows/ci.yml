@@ -29,7 +29,7 @@ jobs:
       - name: Install dependencies
         run: uv sync --group code-quality
       - name: Run linter
-        run: uv run ruff check --select=I,F,FAST,ANN,ASYNC,COM,T10,PT,RET,SIM,N,E,W --ignore=ANN002,ANN003,ANN204,ANN401
+        run: uv run ruff check
       - name: Run formatter
         run: uv run ruff format --check
       - name: Run type checker
