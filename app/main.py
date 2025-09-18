@@ -16,7 +16,7 @@ mcp.mount(mcp_router)
 if __name__ == "__main__":
     # uv run python -m app.main
     if settings.TRANSPORT_MODE in ["stdio", "http"]:
-        mcp.run()
+        mcp.run(transport=settings.TRANSPORT_MODE)
 
     elif settings.TRANSPORT_MODE == "https":
         uvicorn.run(
