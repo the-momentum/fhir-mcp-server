@@ -369,3 +369,8 @@ Distributed under the MIT License. See [MIT License](LICENSE) for more informati
 <div align="center">
   <p><em>Built with ❤️ by <a href="https://themomentum.ai">Momentum</a> • Transforming healthcare data management with AI</em></p>
 </div>
+
+## Hosted deployment
+
+A hosted deployment is available on [Fronteir AI](https://fronteir.ai/mcp/the-momentum-fhir-mcp-server).
+
