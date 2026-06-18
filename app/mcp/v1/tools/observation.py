@@ -1,3 +1,5 @@
+from typing import Any, Literal
+
 from fastmcp import FastMCP
 
 from app.config import settings
@@ -71,7 +73,9 @@ async def get_loinc_codes(
 
 @observation_router.tool
 async def request_observation_resource(
-    request: FhirQueryRequest,
+    method: Literal["GET", "POST", "PUT", "DELETE"],
+    path: str,
+    body: dict[str, Any] | None = None,
 ) -> FhirQueryResponse | FhirError:
     """
     Makes an HTTP request to the FHIR server.
@@ -97,6 +101,8 @@ async def request_observation_resource(
     Returns:
         JSON response from the FHIR server
     """
+
+    request = FhirQueryRequest(method=method, path=path, body=body)
 
     try:
         response = fhir_client.request(

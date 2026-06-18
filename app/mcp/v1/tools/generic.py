@@ -1,7 +1,4 @@
-"""
-This module contains the tool for making generic requests to the FHIR server, when the
-other tools are not applicable.
-"""
+from typing import Any, Literal
 
 from fastmcp import FastMCP
 
@@ -13,13 +10,14 @@ generic_router = FastMCP(name="Generic Request MCP")
 
 @generic_router.tool
 async def request_generic_resource(
-    request: FhirQueryRequest,
+    method: Literal["GET", "POST", "PUT", "DELETE"],
+    path: str,
+    body: dict[str, Any] | None = None,
 ) -> FhirQueryResponse | FhirError:
     """
     Makes an HTTP request to the FHIR server.
     Use this tool to perform CRUD operations on any FHIR resource ONLY if the other
     tools are not applicable.
-
     Rules:
         - When creating or updating a resource, use only the data explicitly provided by
           the user.
@@ -36,6 +34,8 @@ async def request_generic_resource(
     Returns:
         JSON response from the FHIR server
     """
+
+    request = FhirQueryRequest(method=method, path=path, body=body)
 
     try:
         response = fhir_client.request(

@@ -1,3 +1,5 @@
+from typing import Any, Literal
+
 from fastmcp import FastMCP
 
 from app.config import settings
@@ -17,7 +19,9 @@ document_reference_router = FastMCP(name="Document Reference Request MCP")
 
 @document_reference_router.tool
 async def request_document_reference_resource(
-    request: FhirQueryRequest,
+    method: Literal["GET", "POST", "PUT", "DELETE"],
+    path: str,
+    body: dict[str, Any] | None = None,
 ) -> FhirQueryResponse | FhirError:
     """
     Makes an HTTP request to the FHIR server.
@@ -39,6 +43,8 @@ async def request_document_reference_resource(
         JSON response from the FHIR server
 
     """
+
+    request = FhirQueryRequest(method=method, path=path, body=body)
 
     try:
         response = fhir_client.request(
@@ -165,7 +171,6 @@ async def search_pinecone(
 #         text += page.extract_text() or ""
 
 #     return text
-
 
 # @document_reference_router.tool
 # async def check_if_pinecone_document_exists(

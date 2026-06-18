@@ -1,3 +1,5 @@
+from typing import Any, Literal
+
 from fastmcp import FastMCP
 
 from app.schemas.fhir_schemas import FhirError, FhirQueryRequest, FhirQueryResponse
@@ -8,7 +10,9 @@ patient_router = FastMCP(name="Patient Request MCP")
 
 @patient_router.tool
 async def request_patient_resource(
-    request: FhirQueryRequest,
+    method: Literal["GET", "POST", "PUT", "DELETE"],
+    path: str,
+    body: dict[str, Any] | None = None,
 ) -> FhirQueryResponse | FhirError:
     """
     Makes an HTTP request to the FHIR server.
@@ -28,6 +32,8 @@ async def request_patient_resource(
     Returns:
         JSON response from the FHIR server
     """
+
+    request = FhirQueryRequest(method=method, path=path, body=body)
 
     try:
         response = fhir_client.request(
