@@ -1,3 +1,5 @@
+from typing import Any, Literal
+
 from fastmcp import FastMCP
 
 from app.schemas.fhir_schemas import FhirError, FhirQueryRequest, FhirQueryResponse
@@ -8,13 +10,16 @@ condition_router = FastMCP(name="Condition Request MCP")
 
 @condition_router.tool
 async def request_condition_resource(
-    request: FhirQueryRequest,
+    method: Literal["GET", "POST", "PUT", "DELETE"],
+    path: str,
+    body: dict[str, Any] | None = None,
 ) -> FhirQueryResponse | FhirError:
     """
     Makes an HTTP request to the FHIR server.
     Use this tool to perform CRUD operations only on the FHIR Condition resource.
     Rules:
-        - When creating or updating a condition, use only the data explicitly provided by the user.
+        - When creating or updating a condition, use only the data explicitly provided by
+          the user.
         - Do not guess, auto-fill, or assume any missing data.
         - When deleting a condition, ask the user for confirmation with details of the
           condition and wait for the user's confirmation.
@@ -28,6 +33,8 @@ async def request_condition_resource(
     Returns:
         JSON response from the FHIR server
     """
+
+    request = FhirQueryRequest(method=method, path=path, body=body)
 
     try:
         response = fhir_client.request(

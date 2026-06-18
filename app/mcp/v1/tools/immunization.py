@@ -1,3 +1,5 @@
+from typing import Any, Literal
+
 from fastmcp import FastMCP
 
 from app.schemas.fhir_schemas import FhirError, FhirQueryRequest, FhirQueryResponse
@@ -8,7 +10,9 @@ immunization_router = FastMCP(name="Immunization Request MCP")
 
 @immunization_router.tool
 async def request_immunization_resource(
-    request: FhirQueryRequest,
+    method: Literal["GET", "POST", "PUT", "DELETE"],
+    path: str,
+    body: dict[str, Any] | None = None,
 ) -> FhirQueryResponse | FhirError:
     """
     Makes an HTTP request to the FHIR server.
@@ -29,6 +33,8 @@ async def request_immunization_resource(
     Returns:
         JSON response from the FHIR server
     """
+
+    request = FhirQueryRequest(method=method, path=path, body=body)
 
     try:
         response = fhir_client.request(

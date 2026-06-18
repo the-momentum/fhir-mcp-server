@@ -1,3 +1,5 @@
+from typing import Any, Literal
+
 from fastmcp import FastMCP
 
 from app.schemas.fhir_schemas import FhirError, FhirQueryRequest, FhirQueryResponse
@@ -8,7 +10,9 @@ allergy_intolerance_router = FastMCP(name="Allergy Intolerance Request MCP")
 
 @allergy_intolerance_router.tool
 async def request_allergy_intolerance_resource(
-    request: FhirQueryRequest,
+    method: Literal["GET", "POST", "PUT", "DELETE"],
+    path: str,
+    body: dict[str, Any] | None = None,
 ) -> FhirQueryResponse | FhirError:
     """
     Makes an HTTP request to the FHIR server.
@@ -19,7 +23,8 @@ async def request_allergy_intolerance_resource(
         - Do not guess, auto-fill, or assume any missing data.
         - When deleting an allergy intolerance, ask the user for confirmation with details
           of the allergy intolerance and wait for the user's confirmation.
-        - Provide links to the app (not api) allergy intolerance resource in the final response.
+        - Provide links to the app (not api) allergy intolerance resource in the final
+          response.
 
     Args:
         method: HTTP method (GET, POST, PUT, DELETE)
@@ -29,6 +34,8 @@ async def request_allergy_intolerance_resource(
     Returns:
         JSON response from the FHIR server
     """
+
+    request = FhirQueryRequest(method=method, path=path, body=body)
 
     try:
         response = fhir_client.request(
