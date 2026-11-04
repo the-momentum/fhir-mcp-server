@@ -24,7 +24,7 @@ def get_text_splitter() -> SemanticSplitterNodeParser:
 
 
 def download_bytes(url: str) -> bytes:
-    response = requests.get(url)
+    response = requests.get(url, timeout=30)
     response.raise_for_status()
     return response.content
 
